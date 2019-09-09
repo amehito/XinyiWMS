@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>领料版面</title>
+</head>
+<body>
+	<div id="panel" class="col-md-10 col-sm-9">
+       
+    </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body">
+        <table  border=1; cellpadding=12; cellspacing=0; align=center id="modalTable">
+				<tr align=center>
+					<td colspan="4">领料单</td>
+				</tr>
+				<tr align=center>
+					<td>领料人姓名:</td>
+					<td colspan="3" id="userName"></td>
+					
+				</tr>
+				<tr align=center>
+					<td>领料日期:</td>
+					<td colspan="3" id="time"></td>
+				</tr>
+				
+				<tr align=center>
+					<td colspan="4">领料信息</td>
+				</tr>
+				<tr align=center>
+					<td>物品名称</td>
+					<td>物品编号</td>
+					<td>数量</td>
+					<td>单位</td>
+					
+				</tr>
+				<tbody id="information">
+				<tr align=center>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				</tbody>
+				
+			</table>
+      </div>
+      <div class="modal-footer">
+      	<button type="button" class="btn btn-danger" id="declineExport" data-dismiss="modal">拒绝</button>
+        <button type="button" class="btn btn-primary" id="identifyExport" data-dismiss="modal">确认出库</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="notifyPanel"></div>
+<script type="text/javascript" src="./js/notice.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+<typeAliases>
+
+</typeAliases>
+<environments default="development">
+<environment id="development">
+<transactionManager type="JDBC" />
+<dataSource type="POOLED">
+<property name="driver" value="com.mysql.jdbc.Driver" />
+<property name="url" value="jdbc:mysql://localhost:3308/xinyi?serverTimezone=UTC" />
+<property name="username" value="root" />
+<property name="password" value="hanako" />
+</dataSource>
+</environment>
+</environments>
+<mappers>
+<mapper resource="com/xinyi/mapper/XinyiActionMapper.xml" />
+<mapper resource="com/xinyi/mapper/XinyiRolesMapper.xml"/>
+<mapper resource="com/xinyi/mapper/XinyiUserMapper.xml" />
+<mapper resource="com/xinyi/mapper/XinyiUserRoleMapper.xml" />
+<mapper resource="com/xinyi/mapper/XinyiMaterialMapper.xml" />
+<mapper resource="com/xinyi/mapper/XinyiModifyhistoryMapper.xml" />
+<mapper resource="com/xinyi/mapper/XinyiManufacturesMapper.xml" />
+<mapper resource="com/xinyi/mapper/XinyiPickingMapper.xml" />
+<mapper resource="com/xinyi/mapper/XinyiImportMapper.xml" />
+<mapper resource="com/xinyi/mapper/XinyiSupplierInfoMapper.xml" />
+<mapper resource="com/xinyi/mapper/XinyiBatchStockMapper.xml" />
+
+</mappers>
+
+
+</configuration>

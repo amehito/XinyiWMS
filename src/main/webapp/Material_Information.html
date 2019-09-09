@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css"/>
+	<style type="text/css">
+		table{
+				width: 80%;
+			}
+			td{
+			width:160px;
+			height:30px;
+			font-size:20px;
+		}
+	</style>
+	<body>
+		<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal" onclick="seeInformation()">
+  	按钮
+</button> 
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body">
+        <table  border=1; cellpadding=12; cellspacing=0; align=center>
+				<tr align=center>
+					<td colspan="4">领料单</td>
+				</tr>
+				<tr align=center>
+					<td>领料人姓名:</td>
+					<td colspan="3" id="userName"></td>
+					
+				</tr>
+				<tr align=center>
+					<td>领料日期:</td>
+					<td colspan="3" id="time"></td>
+				</tr>
+				
+				<tr align=center>
+					<td colspan="4">领料信息</td>
+				</tr>
+				<tr align=center>
+					<td>物品名称</td>
+					<td>物品编号</td>
+					<td>数量</td>
+					<td>单位</td>
+					
+				</tr>
+				<tbody id="information">
+				<tr align=center>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				</tbody>
+				
+			</table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+<script src="js/jquery-2.2.3.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.js"></script>
+<script type="text/javascript">
+	
+	var a={"admin":"admin","time":"2019-07-19","materials":[{"material":"DN20铝塑对节","materialId":"21270302001","number":1,"unit":"只"},{"material":"2-4kw立式电动机","materialId":"16060115002","number":1,"unit":"台"},{"material":"2路继电器座","materialId":"11020102001","number":1,"unit":"只"},{"material":"剪刀","materialId":"10000000001","number":1,"unit":"个"},{"material":"4-7.5kw立式电机","materialId":"16060117001","number":12,"unit":"台"}]};
+	function seeInformation(){
+		console.log("see");
+		var userName=document.getElementById('userName').innerText=a.admin;
+		var time=document.getElementById('time').innerText=a.time;
+		var information=document.getElementById('information');
+		information.innerHTML="";
+		for(var i=0;i<a.materials.length;i++){
+			console.log(1);
+			information.innerHTML+="<tr align=center>"+
+					"<td>"+a.materials[i].material+"</td>"+
+					"<td>"+a.materials[i].materialId+"</td>"+
+					"<td>"+a.materials[i].number+"</td>"+
+					"<td>"+a.materials[i].unit+"</td>"+
+				"</tr>";
+		}
+	}
+	window.onload = function(){
+		//setInterval(receive,ms);
+		seeInformation();
+	}
+</script>
+</body>
+</html>

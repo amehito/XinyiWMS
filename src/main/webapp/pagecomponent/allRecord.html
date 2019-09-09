@@ -1,0 +1,412 @@
+
+<script>
+    // 查询参数
+    
+    search_user_id = null
+    search_start_date = null
+    search_end_date = null
+	let data;
+    
+    	
+	
+    $(function(){
+    	
+        datePickerInit();
+        userOperationRecordTableInit();
+        searchActionInit();
+        exportStorageAction();
+    })
+
+    // 日期选择器初始化
+	function datePickerInit(){
+		$('.form_date').datetimepicker({
+			format:'yyyy-mm-dd',
+			language : 'zh-CN',
+			endDate : new Date(),
+			weekStart : 1,
+			todayBtn : 1,
+			autoClose : 1,
+			todayHighlight : 1,
+			startView : 2,
+			forceParse : 0,
+			minView:2
+		});
+	}
+	let allArr = [];
+	let arrTemp = [];
+	// 表格初始化
+	function userOperationRecordTableInit(){
+		let importData;
+		let pickingData;
+		fetch('Material/allImportInfo')
+		.then(function(response){
+			return response.json();
+		}).then(function(json){
+			json = json.reverse();
+			importData = json;
+			function formatBatchToTime(it){
+				//WedAug07201916:25:31
+				if(it==''){
+					return '未知';
+				}
+				let temp = dateMap.get(it.substring(3,6));
+				return `${it.substring(8,12)}-${dateMap.get(it.substring(3,6))}-${it.substring(6,8)} ${it.substring(12,14)}-${it.substring(15,17)}-${it.substring(18,20)}`;
+			}
+			let importArr = importData.map((item)=>({"time":formatBatchToTime(item.batchManage),"batch":item.batchManage,"id":item.id,"number":item.importNumber,"manufacturing":item.manufacturing,"materialId":item.materialId,"materialName":item.materialName,"materialSpec":item.materialSpec,"plus":item.plus,"price":item.price,"priceIncludeTax":item.priceIncludeTax,"size":item.size,"supplier":item.supplier,"tax":item.tax,"taxRate":item.taxRate,"totalPrice":item.totalPrice,"totalPriceIncludeTax":item.totalPriceIncludeTax,"unit":item.unit,"viceId":item.viceId,"warehousePosition":item.warehousePosition,"status":"入库"}))
+			allArr.push(...importArr);
+			fetch('Material/allRequestInfo')
+			.then(function(response){
+				return response.json();
+			}).then(function(json){
+				json = json.reverse();
+				pickingData = json;
+				let pickingArr = [];
+				json.filter((item)=>item.factMaterials!=undefined).map(item=>({"materials":item.factMaterials,"time":item.time})).forEach(item=>((eval(item.materials).forEach(it=>{it.time=item.time;pickingArr.push(it)}))));
+				pickingArr = pickingArr.map((item)=>({"time":item.time,"batch":item.batch,"id":item.materialId,"number":item.number,"manufacturing":item.manufacturing,"materialId":item.materialId,"materialName":item.material,"materialSpec":item.materialSpec,"plus":item.plus,"price":item.price*(1-item.taxRate/100),"priceIncludeTax":item.price,"size":item.size,"supplier":item.supplier,"tax":item.tax,"taxRate":item.taxRate,"totalPrice":item.totalPrice*(1-item.taxRate/100),"totalPriceIncludeTax":item.totalPrice,"unit":item.unit,"viceId":item.viceId,"warehousePosition":item.warehousePosition,"status":"出库"}))
+
+				allArr.push(...pickingArr);
+				$('#userOperationRecordTable').bootstrapTable({
+			        columns:[{
+			        	field : 'time',
+			        	title : '时间'
+			        },{
+			        	field : 'status',
+			        	title : '操作'
+			        },{
+			            field : 'materialId',
+			            title : '零件Id'
+			        },{
+			            field : 'materialName',
+			            title : '名字'
+			        },{
+			            field : 'materialSpec',
+			            title : '规格'
+			            /* formatter : function(value, row, index) {
+							var s = '<button class="btn btn-info btn-sm edit"><span>详细</span> </button>';
+							var fun = '';
+							return s;
+						},
+						events : {
+							// 操作列中编辑按钮的动作
+							'click .edit' : function(e, value,
+									row, index) {
+								rowDetailOperation(row);
+							},
+							
+						} */
+			        },{
+			            field : 'warehousePosition',
+			            title : '仓库位置'
+			        },{
+			            field : 'number',
+			            title : '数量'
+			        },{
+			            field : 'priceIncludeTax',
+			            title : '含税价',
+		            	formatter : function(value, row, index) {
+							return value.toFixed(3);
+						},
+			        },{
+			            field : 'price',
+			            title : '单价',
+			            formatter : function(value, row, index) {
+							return value.toFixed(3);
+						},
+			        },{
+			            field : 'taxRate',
+			            title : '税率'
+			        },{
+			            field : 'size',
+			            title : '种类'
+			        },/* {
+			            field : 'tax',
+			            title : '税款',
+			            visible: false
+			        }, */{
+			            field : 'totalPriceIncludeTax',
+			            title : '含税总价',
+			            formatter : function(value, row, index) {
+							return value.toFixed(3);
+						},
+			        },{
+			            field : 'totalPrice',
+			            title : '不含税总价',
+			            formatter : function(value, row, index) {
+							return value.toFixed(3);
+						},
+			        },
+			        {
+			            field : 'unit',
+			            title : '单位'
+			        }
+			        ,{
+			            field : 'batch',
+			            title : '批次管理'
+			        }
+			        ,{
+			            field : 'supplier',
+			            title : '供应商'
+			        }
+			        ,{
+			            field : 'manufacturing',
+			            title : '厂商'
+			        },{
+			            field : 'plus',
+			            title : '备注'
+			        }
+			        ],
+			        data:allArr,
+			        method : 'GET',
+		            dataType : 'json',
+		            pagination : true,
+		            pageNumber : 1,
+		            pageSize : 20,
+		            pageList : [ 5, 10, 25, 50, 100 ],
+		            clickToSelect : true
+			    });
+			});
+		});	
+	}
+	function rowDetailOperation(row) {
+		
+		$('#detail_modal').modal("show");
+		$('#userName').text(row.name);
+		$('#time').text(row.time);
+		let information = document.querySelector('#information');
+		information.innerHTML = "";
+		eval(row.materials).forEach(function(item){
+			
+			information.innerHTML+=`<tr aligin=center height='40px'>
+				<td>${item.material}</td>
+				<td>${item.materialId}}</td>
+				<td>${item.number}</td>
+				<td>${item.unit}</td>
+			</tr>`;
+		});
+		
+		/* information.innerHTML+="<tr align=center>"+
+		"<td>"+json[i].material+"</td>"+
+		"<td>"+json[i].materialId+"</td>"+
+		"<td>"+json[i].number+"</td>"+
+		"<td>"+json[i].unit+"</td>"+
+		"</tr>"; */
+		// load info
+	
+	}
+		//导出excel
+		function exportStorageAction() {
+			
+			$('#export_storage').click(function() {
+				$('#export_modal').modal("show");
+			})
+			$('#export_storage_download').click(function(){
+				JSONToExcelConvertor(arrTemp);			
+				$('#export_modal').modal("hide");
+			})
+			
+		
+		}
+	// 表格刷新
+	function tableRefresh(search_id,search_start_date,search_end_date) {
+			json = allArr;
+			json=json.filter(function(item){
+				if(search_id == '' && search_start_date =='' && search_end_date ==''){
+					console.log(1);
+					return true;
+				} 
+				else if(search_start_date =='' && search_end_date==''){
+					console.log(2);
+
+					return item.size == search_id || item.status == search_id;
+				}
+				else if(search_id==''){
+
+					return filterDate(item.time ,search_start_date,search_end_date);
+				}
+				else{
+					console.log(4);
+					console.log({search_id,item});
+					return item.size == search_id && filterDate(item.time,search_start_date,search_end_date);
+				}										
+			})
+			arrTemp = json;
+			$('#userOperationRecordTable').bootstrapTable('load', json);
+
+	
+		
+	}
+	let dateMap = new Map();
+	dateMap.set("Jan","01");
+	dateMap.set("Feb","02");
+	dateMap.set("Mar","03");
+	dateMap.set("Apr","04");
+	dateMap.set("May","05");
+	dateMap.set("Jun","06");
+	dateMap.set("Jul","07");
+	dateMap.set("Aug","08");
+	dateMap.set("Sep","09");
+	dateMap.set("Oct","10");
+	dateMap.set("Nov","11");
+	dateMap.set("Dec","12");
+	
+	function filterDate(time,search_start_date,search_end_date){
+		let year = time.substring(0,4);
+		let month = time.substring(5,7);
+		let day = time.substring(8,10);
+		let startDate = search_start_date.split('-');
+		let endDate = search_end_date.split('-');
+		let nowtime = parseInt(`${year}${month}${day}`);
+		startDate = parseInt(`${startDate[0]}${startDate[1]}${startDate[2]}`);
+		endDate = parseInt(`${endDate[0]}${endDate[1]}${endDate[2]}`);
+		
+		return nowtime>=startDate && nowtime <=endDate;
+	}
+	
+    function searchActionInit(){
+        $('#search_button').click(function(){
+            search_user_id = $('#user_id').val();
+            search_start_date = $('#start_date').val();
+            search_end_date = $('#end_date').val();
+            tableRefresh(search_user_id,search_start_date,search_end_date);
+        })
+    }
+    document.querySelector('#switchToImport').addEventListener('click',function(){
+    	tableRefresh("入库",'','');
+    })
+    document.querySelector('#switchToExport').addEventListener('click',function(){
+    	tableRefresh("出库",'','');
+    })
+</script>
+
+<div class="panel panel-default">
+    <ol class="breadcrumb">
+        <li>入库日志</li>
+    </ol>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-3">
+<!--                 <form action="" class="form-inline">
+ -->                    <div class="form-group">
+<!--                         <label class="form-label">用户ID：</label>
+ -->                        <input type="text" id="user_id" class="form-control" placeholder="输入ID/名字/管理员" style="width:50%">
+                    </div>
+                <!-- </form> -->
+            </div>
+             <div class="col-md-7">
+                <form action="" class="form-inline">
+                    <label class="form-label">日期范围：</label>
+                    <input class="form_date form-control" id="start_date" placeholder="起始日期">
+                    <label class="form-label">&nbsp;&nbsp;-&nbsp;&nbsp;</label>
+                    <input class="form_date form-control" id="end_date" placeholder="结束日期">
+                </form>
+            </div> 
+            <div class="col-md-2">
+                <button class="btn btn-success" id="search_button">
+                    <span class="glyphicon glyphicon-search"></span> <span>查询</span>
+                </button>
+                
+            </div>
+        </div>
+        <button class="btn btn-sm btn-default" id="export_storage">
+					<span class="glyphicon glyphicon-export"></span> <span>导出</span>
+		</button>
+		<button class="btn btn-sm btn-info" id="switchToImport" >
+					<span class="glyphicon glyphicon-export"></span> <span>入库</span>
+		</button>
+		<button class="btn btn-sm btn-warning" id="switchToExport" >
+					<span class="glyphicon glyphicon-export"></span> <span>出库</span>
+		</button>
+        <div class="row" style="margin-top:25px">
+            <div class="col-md-12">
+                <table class="table table-striped" id="userOperationRecordTable"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 导出库存 -->
+<div class="modal fade" id="export_modal" table-index="-1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true"
+	data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button class="close" type="button" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel">导出库存信息</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-3 col-sm-3" style="text-align: center;">
+						<img src="media/icons/warning-icon.png" alt=""
+							style="width: 70px; height: 70px; margin-top: 20px;">
+					</div>
+					<div class="col-md-8 col-sm-8">
+						<h3>是否确认导出库存信息</h3>
+						<p>(注意：请确定要导出的库存信息，导出的内容为当前列表的搜索结果)</p>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-default" type="button" data-dismiss="modal">
+					<span>取消</span>
+				</button>
+				<button class="btn btn-success" type="button" id="export_storage_download">
+					<span>确认下载</span>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="detail_modal" class="modal fade" table-index="-1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true"
+	data-backdrop="static">
+	<div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body">
+        <table  border=1; cellpadding=12; cellspacing=0; align=center id="modalTable">
+				<tr align=center>
+					<td colspan="4">领料单</td>
+				</tr>
+				<tr align=center>
+					<td>领料人姓名:</td>
+					<td colspan="3" id="userName"></td>
+					
+				</tr>
+				<tr align=center>
+					<td>领料日期:</td>
+					<td colspan="3" id="time"></td>
+				</tr>
+				
+				<tr align=center>
+					<td colspan="4">领料信息</td>
+				</tr>
+				<tr align=center>
+					<td>物品名称</td>
+					<td>物品编号</td>
+					<td>数量</td>
+					<td>单位</td>
+					
+				</tr>
+				<tbody id="information">
+				<tr align=center>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				</tbody>
+				
+			</table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="identifyExport" data-dismiss="modal">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
