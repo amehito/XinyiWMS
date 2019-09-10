@@ -9,6 +9,14 @@
  	}
  </style>
  <script>
+ 	let allImageInfo = [];
+ 	fetch('Material/ImageInfo')
+ 	  .then(function(response) {
+ 	    return response.json();
+ 	  })
+ 	  .then(function(myJson) {
+ 	    allImageInfo = myJson;
+ 	  });
     // 鏌ヨ鍙傛暟
 	//document.querySelector('#search_button').addEventListener('keydown',function(key){console.log(key)});
 	document.querySelector('#user_id').addEventListener('keydown',function(key){
@@ -28,7 +36,10 @@
     })
 	
     function showPicture(row){
-    	console.log({row});
+    	let temp = allImageInfo.filter(item => item.materialId ==row.materialId);
+    	let url = temp.length>0?temp[0].imageName:'';
+    	console.log({url});
+    	document.querySelector('#imgUrl').src = './media/images/'+url;
     	$('#myModal').modal("show");
     }
     // 鏃ユ湡閫夋嫨鍣ㄥ垵濮嬪寲
@@ -252,11 +263,10 @@
         <h4 class="modal-title" id="myModalLabel">Modal title</h4>
       </div>
       <div class="modal-body">
-		<img class='modalImg' src="./media/images/backgroundPic.png" alt="..." class="img-rounded">
+		<img class='modalImg' id="imgUrl" src="./media/images/backgroundPic.png" alt="没有图片，请上传" class="img-rounded">
 		
       </div>
       <div class="modal-footer">
-      	<button type="button" class="btn btn-danger" id="declineExport" data-dismiss="modal">拒绝</button>
         <button type="button" class="btn btn-primary" id="identifyExport" data-dismiss="modal">确认</button>
       </div>
     </div>

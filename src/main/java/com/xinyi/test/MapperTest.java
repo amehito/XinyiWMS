@@ -19,6 +19,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.junit.Test;
 import org.omg.IOP.CodecPackage.FormatMismatch;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,6 +27,7 @@ import com.fasterxml.jackson.databind.DeserializationConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.DataFormatReaders.Match;
 import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.xinyi.bean.XinyiImage;
 import com.xinyi.bean.XinyiImport;
 import com.xinyi.bean.XinyiMaterial;
 import com.xinyi.bean.XinyiPicking;
@@ -33,6 +35,7 @@ import com.xinyi.bean.XinyiPickingExample;
 import com.xinyi.bean.XinyiUser;
 import com.xinyi.bean.XinyiUserExample;
 import com.xinyi.bean.XinyiUserExample.Criteria;
+import com.xinyi.dao.XinyiImageMapper;
 import com.xinyi.dao.XinyiImportMapper;
 import com.xinyi.dao.XinyiMaterialMapper;
 import com.xinyi.dao.XinyiPickingMapper;
@@ -40,11 +43,11 @@ import com.xinyi.dao.XinyiUserMapper;
 import com.xinyi.utils.MybatisOfSpringUtil;
 
 
-
+@Service
 public class MapperTest {
-	@Resource
-
-	
+	SqlSession sqlSession = MybatisOfSpringUtil.getSessionFactory().openSession();
+	XinyiImageMapper imageMapper = sqlSession.getMapper(XinyiImageMapper.class);
+	XinyiImage record = new XinyiImage();
 	public static void main(String[] args) {
 //		XinyiUserMapper xinyiUserMapper;
 //		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -107,7 +110,6 @@ public class MapperTest {
 	//新益picking测试
 	@Test
 	public void tt() throws InterruptedException {		
-		SqlSession sqlSession = MybatisOfSpringUtil.getSessionFactory().openSession();
 	//	List<XinyiImport> list = sqlSession.getMapper(XinyiImportMapper.class).selectAll();
 //		System.out.println(list.size());
 //		System.out.println(1);
@@ -116,24 +118,26 @@ public class MapperTest {
 		ArrayList<String> list2 = new ArrayList<String>();
 		Date start = new Date();
 		traverse(list2,file);
-		System.out.println(list2.size()+"  spend："+(new Date().getTime()-start.getTime()));
-		int i = 0;
-		int length = list2.size();
-		for(String str:list2) {
-			System.out.print(i+++"/"+length);
-			match(str,materialList);
-		}
-		
+//		System.out.println(list2.size()+"  spend："+(new Date().getTime()-start.getTime()));
+//		int i = 0;
+//		int length = list2.size();
+//		for(String str:list2) {
+//			System.out.print(i+++"/"+length);
+//			match(str,materialList);
+//		}
+//		sqlSession.commit();
 	}
 	public void match(String str,List<XinyiMaterial> list) {
 		XinyiMaterial res = null;
 		int maxLen = 0;
 		for(XinyiMaterial material:list) {
 			int temp = 0;
+			String mName = material.getMaterialName();
 			for(int i=0;i<str.length();i++) {
-				for(int j = 0;j<material.getMaterialName().length();j++) {
-					if(str.charAt(i)==material.getMaterialName().charAt(j) &&(str.charAt(i)<'0' ||str.charAt(i)>'9')) {
+				for(int j = 0;j<mName.length();j++) {
+					if(str.charAt(i)==mName.charAt(j) &&(str.charAt(i)<'0' ||str.charAt(i)>'9')) {
 						temp++;
+						mName = mName.substring(0,j)+mName.substring(j+1);
 						break;
 					}
 				}
@@ -144,6 +148,11 @@ public class MapperTest {
 			}
 		}
 		System.out.println(res.getMaterialName()!=null?"当前正在为【"+str+"】匹配最佳，结果是"+res.getMaterialName():"no");
+		record.setMaterialId(res.getMaterialId()!=null ? res.getMaterialId():"");
+		record.setImageName(str);
+		record.setPlus(res.getMaterialName());
+		imageMapper.insert(record );
+		
 	}
 	public void traverse(ArrayList list,File file) {
 		
@@ -154,7 +163,7 @@ public class MapperTest {
 			}
 		}
 		else {
-			list.add(file.getName());
+			file.renameTo(new File("C:\\Users\\45981\\eclipse-workspace\\xinyiWMS\\src\\main\\webapp\\media\\images\\"+file.getName()));
 		}
 	}
 	

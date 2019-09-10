@@ -26,6 +26,7 @@ import com.xinyi.bean.XinyiModifyhistory;
 import com.xinyi.bean.XinyiPicking;
 import com.xinyi.bean.XinyiPickingExample;
 import com.xinyi.dao.XinyiBatchStockMapper;
+import com.xinyi.dao.XinyiImageMapper;
 import com.xinyi.dao.XinyiImportMapper;
 import com.xinyi.dao.XinyiMaterialMapper;
 import com.xinyi.dao.XinyiModifyhistoryMapper;
@@ -41,7 +42,8 @@ import com.xinyi.utils.MybatisOfSpringUtil;
 public class MaterialDataService {
 	@Autowired
 	 XinyiImportMapper testMapper;
-	
+	@Autowired
+	XinyiImageMapper imageMapper;
 	public static ObjectMapper jsonCreater = new ObjectMapper();
 	static SqlSession sqlSession = MybatisOfSpringUtil.getSessionFactory().openSession();
 	public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -424,6 +426,10 @@ public class MaterialDataService {
 		}
 		// TODO Auto-generated method stub
 		return null;
+	}
+	public String getAllImageInfo() throws JsonProcessingException {
+		// TODO Auto-generated method stub
+		return jsonCreater.writeValueAsString((imageMapper.selectAll()));
 	}
 	
 	

@@ -29,6 +29,7 @@
 <mapper resource="com/xinyi/mapper/XinyiImportMapper.xml" />
 <mapper resource="com/xinyi/mapper/XinyiSupplierInfoMapper.xml" />
 <mapper resource="com/xinyi/mapper/XinyiBatchStockMapper.xml" />
+<mapper resource="com/xinyi/mapper/XinyiImageMapper.xml" />
 
 </mappers>
 

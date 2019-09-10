@@ -375,14 +375,14 @@
 			father.onclick=function(ev){
 				let allInput = document.querySelectorAll('table input');
 				for(let i=0;i<allInput.length/tableWidth;i++){
-					allInput[i*tableWidth+16].value = ev.target.innerText;
+					allInput[i*tableWidth+15].value = ev.target.innerText;
 					allInput[i*tableWidth+14].value = batchManage;
 				}
 			}
 			father2.onclick=function(ev){
 				let allInput = document.querySelectorAll('table input');
 				for(let i=0;i<allInput.length/tableWidth;i++){
-					allInput[i*tableWidth+15].value = ev.target.innerText;
+					allInput[i*tableWidth+16].value = ev.target.innerText;
 					allInput[i*tableWidth+14].value = batchManage;
 
 				}

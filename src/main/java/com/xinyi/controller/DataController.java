@@ -34,6 +34,8 @@ import com.xinyi.test.notifyModel;
 public class DataController {
 	@Autowired
 	MaterialDataService materialDataService;
+	
+	
 	notifyModel notify;
 	final static int  materialInfoNumber = 5;
 	boolean needQuery = false;
@@ -45,6 +47,11 @@ public class DataController {
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh-mm-ss");
 
     
+    @RequestMapping(value="/ImageInfo",produces="application/json;charset=utf-8")
+    public @ResponseBody String getImageInfo() throws JsonProcessingException {
+    	return materialDataService.getAllImageInfo();
+    	
+    }
     @RequestMapping(value="/importMaterials",produces="application/json;charset=utf-8")
 	public @ResponseBody String importMateriasls(@RequestBody List<XinyiImport>info,HttpSession session) throws JsonProcessingException {
     	String result =materialDataService.saveList(info,session);	

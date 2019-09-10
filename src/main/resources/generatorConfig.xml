@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+  <context id="context1">
+    <jdbcConnection connectionURL="jdbc:mysql://127.0.0.1:3308/xinyi?serverTimezone=UTC" driverClass="com.mysql.jdbc.Driver" password="hanako" userId="root" />
+    <javaModelGenerator targetPackage="com.xinyi.bean" targetProject="xinyiWMS" />
+    <sqlMapGenerator targetPackage="com.xinyi.mapper" targetProject="xinyiWMS" />
+    <javaClientGenerator targetPackage="com.xinyi.dao" targetProject="xinyiWMS" type="XMLMAPPER" />
+    <table schema="xinyi" tableName="xinyi_image"  enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true">
+     
+    </table>
+    
+    
+  </context>
+</generatorConfiguration>
