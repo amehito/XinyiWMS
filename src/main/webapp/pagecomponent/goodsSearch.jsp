@@ -10,13 +10,18 @@
  </style>
  <script>
  	let allImageInfo = [];
- 	fetch('Material/ImageInfo')
- 	  .then(function(response) {
- 	    return response.json();
- 	  })
- 	  .then(function(myJson) {
- 	    allImageInfo = myJson;
- 	  });
+ 	let globeRow ;
+ 	
+ 	function getAllInfo(){
+ 		fetch('Material/ImageInfo')
+ 	 	  .then(function(response) {
+ 	 	    return response.json();
+ 	 	  })
+ 	 	  .then(function(myJson) {
+ 	 	    allImageInfo = myJson.reverse();
+ 	 	  });
+ 	}
+ 	getAllInfo();
     // 鏌ヨ鍙傛暟
 	//document.querySelector('#search_button').addEventListener('keydown',function(key){console.log(key)});
 	document.querySelector('#user_id').addEventListener('keydown',function(key){
@@ -42,7 +47,40 @@
     	document.querySelector('#imgUrl').src = './media/images/'+url;
     	$('#myModal').modal("show");
     }
-    // 鏃ユ湡閫夋嫨鍣ㄥ垵濮嬪寲
+    function editPicture(row){
+    	$('#editModal').modal("show");
+    	globeRow = row;
+    }
+    function uploadImage(){
+    	let row = globeRow;
+    	let formData = new FormData();
+        formData.append("file", document.getElementById("file1").files[0]); 
+        formData.append("id",row.materialId);
+        formData.append("name",row.materialName);
+        $.ajax({
+            url: "/upload",
+            type: "POST",
+            data: formData,
+            /**
+            *必须false才会自动加上正确的Content-Type
+            */
+            contentType: false,
+            /**
+            * 必须false才会避开jQuery对 formdata 的默认处理
+            * XMLHttpRequest会对 formdata 进行正确的处理
+            */
+            processData: false,
+            success: function (data) {
+            	alert("上传成功！");
+            	$('#editModal').modal("hide");
+            	getAllInfo();
+            },
+            error: function () {
+                alert("上传失败！");
+            }
+        });
+   
+    }
 	function datePickerInit(){
 		$('.form_date').datetimepicker({
 			format:'yyyy-mm-dd',
@@ -119,6 +157,10 @@
 							row, index) {
 						showPicture(row);
 	           		},
+	           		'click .editPic' : function(e ,value,
+	           				row, index){
+	           			editPicture(row);
+	           		}
 	           	}
 	        }],
 	        
@@ -265,6 +307,26 @@
       <div class="modal-body">
 		<img class='modalImg' id="imgUrl" src="./media/images/backgroundPic.png" alt="没有图片，请上传" class="img-rounded">
 		
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="identifyExport" data-dismiss="modal">确认</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EditModal -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body">
+	    <input type="file" name="file" id="file1"><br>
+	    <input type="submit" value="提交" id="uploadBtn" onclick="uploadImage()">
+	    
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" id="identifyExport" data-dismiss="modal">确认</button>

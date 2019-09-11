@@ -68,6 +68,8 @@ public class ShiroConfiguration {
 //		/subLogin = anon
 //			/mainPage = rolesOr["admin","user"]
 //		/*  = authc
+		filterChainDefinitionMap.put("/upload.html", "anon");
+		filterChainDefinitionMap.put("/upload", "anon");
 		filterChainDefinitionMap.put("/getXinyiUser", "anon");
 		filterChainDefinitionMap.put("/material/*", "anon");
 		filterChainDefinitionMap.put("/otherInfo/*", "roleOrFilter[admin,user]");
@@ -76,7 +78,7 @@ public class ShiroConfiguration {
 		filterChainDefinitionMap.put("/login.html", "anon");
 		filterChainDefinitionMap.put("/subLogin", "anon");
 		filterChainDefinitionMap.put("/mainPage", "anon");
-
+		
 		filterChainDefinitionMap.put("/updatePermissionss.html", "anon");
 		filterChainDefinitionMap.put("/blogin.html", "anon");
 		filterChainDefinitionMap.put("/login", "anon");
