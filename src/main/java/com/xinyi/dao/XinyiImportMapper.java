@@ -1,15 +1,14 @@
 package com.xinyi.dao;
 
-import com.xinyi.bean.XinyiImport;
-import com.xinyi.bean.XinyiImportExample;
-import com.xinyi.bean.XinyiManufactures;
-
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.junit.experimental.theories.FromDataPoints;
+
+import com.xinyi.bean.XinyiImport;
+import com.xinyi.bean.XinyiImportExample;
+
+
 @Mapper
 public interface XinyiImportMapper {
 

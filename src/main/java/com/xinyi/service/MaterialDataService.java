@@ -1,6 +1,5 @@
 package com.xinyi.service;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

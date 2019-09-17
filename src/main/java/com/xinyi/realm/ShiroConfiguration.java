@@ -44,7 +44,7 @@ public class ShiroConfiguration {
 
 		// 必须设置 SecurityManager
 		shiroFilterFactoryBean.setSecurityManager(securityManager);
-		// 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
+		
 		//未授权界面;
 		shiroFilterFactoryBean.setUnauthorizedUrl("/nopermissions.html");
 
@@ -68,6 +68,8 @@ public class ShiroConfiguration {
 //		/subLogin = anon
 //			/mainPage = rolesOr["admin","user"]
 //		/*  = authc
+		filterChainDefinitionMap.put("/images/*", "anon");
+
 		filterChainDefinitionMap.put("/upload.html", "anon");
 		filterChainDefinitionMap.put("/upload", "anon");
 		filterChainDefinitionMap.put("/getXinyiUser", "anon");

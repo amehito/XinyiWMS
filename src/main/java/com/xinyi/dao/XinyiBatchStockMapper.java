@@ -3,8 +3,10 @@ package com.xinyi.dao;
 import com.xinyi.bean.XinyiBatchStock;
 import com.xinyi.bean.XinyiBatchStockExample;
 import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+@Mapper
 public interface XinyiBatchStockMapper {
 
 	/**

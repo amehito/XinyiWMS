@@ -44,7 +44,7 @@
     	let temp = allImageInfo.filter(item => item.materialId ==row.materialId);
     	let url = temp.length>0?temp[0].imageName:'';
     	console.log({url});
-    	document.querySelector('#imgUrl').src = './media/images/'+url;
+    	document.querySelector('#imgUrl').src = '/images/'+url;
     	$('#myModal').modal("show");
     }
     function editPicture(row){
@@ -58,7 +58,7 @@
         formData.append("id",row.materialId);
         formData.append("name",row.materialName);
         $.ajax({
-            url: "/upload",
+            url: "./upload",
             type: "POST",
             data: formData,
             /**
@@ -302,7 +302,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+        <h4 class="modal-title" id="myModalLabel"></h4>
       </div>
       <div class="modal-body">
 		<img class='modalImg' id="imgUrl" src="./media/images/backgroundPic.png" alt="没有图片，请上传" class="img-rounded">
@@ -321,7 +321,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+        <h4 class="modal-title" id="myModalLabel"></h4>
       </div>
       <div class="modal-body">
 	    <input type="file" name="file" id="file1"><br>

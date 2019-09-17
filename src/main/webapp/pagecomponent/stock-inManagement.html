@@ -10,7 +10,9 @@
 		table {
 				width: 100%;
 			}
-			
+		#imageForm{
+			visibility: hidden;
+		}
 			input {
 				width: 100%;
 			}
@@ -23,6 +25,10 @@
 			#inputGroup{
 				width:80%;
 				margin: 0 auto;
+			}
+			.subInput{
+				width:70px;
+				position: absolute;
 			}
 		}
    
@@ -116,6 +122,7 @@
 		</div>
 		<script>
 		const tableWidth = 18;
+		let globeRow ;
 		let batchManage = new Date().toString().split(' ').join('').slice(0,20);
 			let fill = `<tr>
 		      <td><input type='text'></td>
@@ -139,6 +146,7 @@
  		 </tr>`;
 
      let allMaterial;
+     let allImageUrlInfo = [];
      fetch('Material/getMaterialInfo',{
       headers:new Headers({
              "Content-Type":"application/json",
@@ -317,7 +325,7 @@
     		arr.push(item.materialId);
     	});
 		console.log({arr}); */
-    	let result = allMaterial.filter(item => item.materialName.search(id)!== -1).slice(0,100);
+    	let result = allMaterial.filter(item => item.materialName.search(id)!== -1).slice(0,15);
         arr = [];
         result.forEach(item => {arr.push(item.materialName)});
         console.log({arr})
@@ -353,9 +361,22 @@
         inputArrays[row+4].value = info[0].warehousePosition;
         inputArrays[row+9].value = info[0].materialType;
         inputArrays[row+13].value = info[0].materialUnit;
+        fillImage(info[0]);
         
       }
+
+      function fillImage(row){
+    	document.querySelector('#imageForm').style.visibility='visible';
+        document.querySelector('#materialImg').src = './media/icons/error-icon.png';
+    	globeRow = row;
+        let id = row.materialId;
+        let url = allImageUrlInfo.filter(item => item.materialId == id)[0].imageName ;
+        
+        document.querySelector('#materialImg').src = '/images/'+url;
+      }
+
       function fillMoneyInput(){
+    	  //填充与钱有关的input框
     	  let inputs = document.querySelectorAll('table input');
     	  for(let i=0;i<inputs.length/tableWidth;i++){ 
     		let number = parseInt(inputs[i*tableWidth+5].value);
@@ -388,18 +409,66 @@
 				}
 				console.log(batchManage);
 			}
-			
+			getImageInfo();
 
 		}
-		
+		function getImageInfo() {
+			fetch('Material/ImageInfo')
+            .then(response => response.json())
+            .then(item => { allImageUrlInfo = item.reverse();console.log({item})} );
+		}
       
 		window.onload=pageInit();
-
-    	
-      
+		
+		function uploadImage(){
+	    	let row = globeRow;
+	    	let formData = new FormData();
+	        formData.append("file", document.getElementById("file1").files[0]); 
+	        formData.append("id",row.materialId);
+	        formData.append("name",row.materialName);
+	        $.ajax({
+	            url: "./upload",
+	            type: "POST",
+	            data: formData,
+	            /**
+	            *必须false才会自动加上正确的Content-Type
+	            */
+	            contentType: false,
+	            /**
+	            * 必须false才会避开jQuery对 formdata 的默认处理
+	            * XMLHttpRequest会对 formdata 进行正确的处理
+	            */
+	            processData: false,
+	            success: function (data) {
+	            	alert("上传成功！");
+	            	$('#editModal').modal("hide");
+	            	getImageInfo();
+	            	freshImg(row);
+	            },
+	            error: function () {
+	                alert("上传失败！");
+	            }
+	        });
+	   
+	    }
+    	function freshImg(row) {
+    		fetch('Material/ImageInfo')
+            .then(response => response.json())
+            .then(item => {  let url = item.reverse().filter(item =>item.materialId == row.materialId)[0].imageName ;console.log(url);changeImageUrl(url); } );
+			
+		}
+      	function changeImageUrl(url) {
+      	  document.querySelector('#materialImg').src = '/images/'+url;
+		}
 		</script>
 	
- 
+ 	<div>
+		<div id="imageForm">
+		<img id="materialImg" src="./media/icons/error-icon.png" class="img-rounded" alt="Responsive image" width="200px" height="200px">
+		<input type="file" name="file" id="file1" class="btn "><br>
+	    <input type="submit" value="提交" id="uploadBtn" onclick="uploadImage()" class="subInput">
+		</div>
+	</div>
 
 	</body>
 

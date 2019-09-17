@@ -12,7 +12,6 @@ import com.xinyi.dao.XinyiSupplierInfoMapper;
 @EnableScheduling
 public class AccessDB {
 	//access to database every certain time in case connection to be closed
-		@Scheduled(fixedRate = 1000000)   
 		public void accessDB() {
 			SqlSession sqlSession = MybatisOfSpringUtil.getSessionFactory().openSession();
 			sqlSession.getMapper(XinyiSupplierInfoMapper.class).selectAll();

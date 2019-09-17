@@ -38,8 +38,7 @@ public class UploadController {
         }
         double random = Math.floor(Math.random()*1000);
         String fileName = random+file.getOriginalFilename();
-        String filePath = "webapp/media/images/";
-        File dest = new File(filePath + fileName);
+        File dest = new File(fileName);
         try {
             file.transferTo(dest);
             LOGGER.info("上传成功");
