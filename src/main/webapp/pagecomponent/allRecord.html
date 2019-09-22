@@ -65,6 +65,7 @@
 				pickingArr = pickingArr.map((item)=>({"time":item.time,"batch":item.batch,"id":item.materialId,"number":item.number,"manufacturing":item.manufacturing,"materialId":item.materialId,"materialName":item.material,"materialSpec":item.materialSpec,"plus":item.plus,"price":item.price*(1-item.taxRate/100),"priceIncludeTax":item.price,"size":item.size,"supplier":item.supplier,"tax":item.tax,"taxRate":item.taxRate,"totalPrice":item.totalPrice*(1-item.taxRate/100),"totalPriceIncludeTax":item.totalPrice,"unit":item.unit,"viceId":item.viceId,"warehousePosition":item.warehousePosition,"status":"出库"}))
 
 				allArr.push(...pickingArr);
+				arrTemp = allArr;
 				$('#userOperationRecordTable').bootstrapTable({
 			        columns:[{
 			        	field : 'time',

@@ -95,7 +95,7 @@
 						<tr>
 							<td><input type="" name=""></td>
 							<td><input type="" name=""></td>
-							<td><input type="" name="" class="auto" oninput="searchForFill(this.value)"></td>
+							<td><input type="" name="" class="auto" oninput="searchForFill(this.value,event)"></td>
 							<td><input type="" name=""></td>
 							<td><input type="" name=""></td>
 							<td><input type="" name="" oninput="fillMoneyInput()"></td>
@@ -127,7 +127,7 @@
 			let fill = `<tr>
 		      <td><input type='text'></td>
 		      <td><input type='text'></td>
-		      <td><input type='text' class='auto' oninput="searchForFill(this.value)"></td>
+		      <td><input type='text' class='auto' oninput="searchForFill(this.value,event)"></td>
 		      <td><input type='text'></td>
 		      <td><input type='text'></td>
 		      <td><input type='text'></td>
@@ -317,9 +317,14 @@
     }) */
       
 
-      function searchForFill(id){
-    	  //给所有input框添加id
-    	  
+      function searchForFill(id,event){
+    	let that = event.srcElement.parentElement.parentElement;
+    	let i ;
+    	for(i=0;i<that.parentElement.children.length;i++){
+    		if(that.parentElement.children[i] == that)
+    			break;
+    	}
+    	console.log('1');
     	let arr = [];
     	/* allMaterial.filter(item => return item.materialId.search(id)!== -1).forEach(item => {
     		arr.push(item.materialId);
@@ -330,7 +335,8 @@
         result.forEach(item => {arr.push(item.materialName)});
         console.log({arr})
         let allArray = document.querySelectorAll('table input');
-    	let index = allArray.length-tableWidth;
+    	let index = tableWidth*(i);
+    	console.log({index,i});
     	let inputItem = allArray[index+2];
 
     	$('.auto').autocomplete({
@@ -370,9 +376,12 @@
         document.querySelector('#materialImg').src = './media/icons/error-icon.png';
     	globeRow = row;
         let id = row.materialId;
-        let url = allImageUrlInfo.filter(item => item.materialId == id)[0].imageName ;
-        
-        document.querySelector('#materialImg').src = '/images/'+url;
+		try {
+	        let url = allImageUrlInfo.filter(item => item.materialId == id)[0].imageName;
+	        document.querySelector('#materialImg').src = '/images/'+url;
+		} catch (e) {
+			// TODO: handle exception
+		}        
       }
 
       function fillMoneyInput(){
@@ -391,6 +400,7 @@
     	  }
       }
 		function pageInit(){
+			deleteRowInit();
 			let father = document.querySelector('#supplier');
 			let father2 = document.querySelector('#manufacturer');
 			father.onclick=function(ev){
@@ -418,7 +428,6 @@
             .then(item => { allImageUrlInfo = item.reverse();console.log({item})} );
 		}
       
-		window.onload=pageInit();
 		
 		function uploadImage(){
 	    	let row = globeRow;
@@ -460,6 +469,89 @@
       	function changeImageUrl(url) {
       	  document.querySelector('#materialImg').src = '/images/'+url;
 		}
+      	
+      	function showButton(ev) {
+      		document.querySelector('#deleteBtn')==null?'':document.querySelector('#deleteBtn').remove();
+	        let oEvent=ev;
+	        console.log(oEvent);
+	        let oDiv=document.createElement('div');
+	        console.log(oEvent.clientX==undefined);
+			//改变背景颜色
+			let tr = ev.target;
+			let flag = 0;
+			while(tr.tagName!='TR' && flag < 4){
+				flag++;
+				tr = tr.parentElement;
+			}
+			tr.style.background='#d1eeee';
+	   //     oDiv.style.left=oEvent.clientX+'px';  // 指定创建的DIV在文档中距离左侧的位置
+	     //   oDiv.style.top=oEvent.clientY+'px';  // 指定创建的DIV在文档中距离顶部的位置
+	     	oDiv.style.left=oEvent.clientX==undefined?oEvent.changedTouches[0].pageX+'px':oEvent.pageX+'px';
+	     	oDiv.style.top=oEvent.clientY==undefined?oEvent.changedTouches[0].pageY+'px':oEvent.pageY+'px';
+	        oDiv.style.position='absolute'; // 为新创建的DIV指定绝对定位
+	        oDiv.style.width='200px'; // 指定宽度
+	        oDiv.style.height='200px'; // 指定高度
+	        oDiv.id = 'deleteBtn';
+	        oDiv.innerHTML = `<button class="btn" id='delBtn'>删除</button>`;
+	        document.body.appendChild(oDiv); 
+	        oDiv.oncontextmenu=function(){return false};
+	        let that = ev;
+	        let btn = document.querySelector('#delBtn');
+	        btn.style.width='100px';
+	        btn.style.height='50px';
+	        btn.addEventListener('click',()=>{
+				switch (that.srcElement.parentElement.tagName) {
+				case 'TD':
+					that.srcElement.parentElement.parentElement.remove();
+					break;
+
+				case 'TR':
+					that.srcElement.parentElement.remove();
+					break;
+				}
+	        });
+
+		}
+      	
+      
+      	
+      	function deleteRow(event) {
+			console.log(event)
+		}
+      	//删除一行
+      	function deleteRowInit() {
+      		//屏蔽右键属性框
+      		document.addEventListener('click',()=>{
+      			document.querySelector('#deleteBtn')==null?'':document.querySelector('#deleteBtn').remove();
+      			document.querySelectorAll('#tbody tr').forEach(item=>{item.style.background='white'});
+      		})
+      		document.querySelector('#tbody').oncontextmenu=function(){return false};
+      		document.querySelector('#tbody').addEventListener('mouseup',function(event){
+      			if(event.button==2){
+      				showButton(event);
+      			}
+      		});
+      		let timer = null;
+          	let startTime = '';
+          	let endTime = '';
+          	const label = document.querySelector('#tbody');
+
+          	label.addEventListener('touchstart', function () {
+          	  startTime = new Date() ;    
+          	});
+
+          	label.addEventListener('touchend', function (event) {
+          	  endTime = new Date();
+          	  console.log(endTime-startTime);
+          	  if (endTime - startTime > 300) {
+				showButton(event);
+				console.log(1);
+          	  }
+          	});
+		};
+      	
+		window.onload=pageInit();
+
 		</script>
 	
  	<div>

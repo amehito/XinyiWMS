@@ -269,7 +269,7 @@
            <div class="col-md-3" >
                 
                     <div class="form-group">
-                        <input type="text" id="user_id" class="form-control" placeholder="用户ID" style="width:50%">
+                        <input type="text" id="user_id" class="form-control" placeholder="零配件Id或名称" style="width:50%">
                     </div>
                 
             </div>

@@ -69,6 +69,8 @@ public class ShiroConfiguration {
 //			/mainPage = rolesOr["admin","user"]
 //		/*  = authc
 		filterChainDefinitionMap.put("/images/*", "anon");
+		filterChainDefinitionMap.put("/videos/*", "anon");
+		filterChainDefinitionMap.put("/OtherInfo/*", "anon");
 
 		filterChainDefinitionMap.put("/upload.html", "anon");
 		filterChainDefinitionMap.put("/upload", "anon");
