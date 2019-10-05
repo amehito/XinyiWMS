@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -82,18 +83,7 @@ public class DataController {
 		String result = jsonCreater.writeValueAsString(theList);
 		return result;
 	}
-	public class jsonid{
-		private String id ;
-
-		public String getId() {
-			return id;
-		}
-
-		public void setId(String id) {
-			this.id = id;
-		} 
-		
-	}
+	
 	
 	@RequestMapping(value="/declineRequest",produces="application/json;charset=utf-8")
 	public @ResponseBody String declineRequest(HttpServletRequest request,@RequestBody  String id,HttpSession session)  {
@@ -108,13 +98,22 @@ public class DataController {
 	}
 	
 	@RequestMapping(value="/passRequest",produces="application/json;charset=utf-8")
-	public @ResponseBody String passRequest(HttpServletRequest request,@RequestBody  String id,HttpSession session)  {
-		System.out.println(request.getParameterMap().entrySet().size());
+	public @ResponseBody String passRequest(HttpSession session,@RequestParam(value="globalId") String id,HttpServletRequest request)  {
 		String admin = (String) session.getAttribute("UserName");
-		if(!materialDataService.passRequest(Integer.parseInt(id),admin)) {
+		Map<String,String[]> params =  request.getParameterMap();
+	    ArrayList<Material> materials = new ArrayList<Material>();
+	    System.out.println(params.size());
+	    for(int i=0;i<params.size()/2;i++) {       	     
+        	Material material = new Material();
+        	material.setMaterialId(params.get("materialInfo["+i+"][materialId]")[0]);
+        	material.setNumber(Integer.parseInt(params.get("materialInfo["+i+"][number]")[0]));
+        	materials.add(material);
+        }
+	    if(!materialDataService.passRequest(Integer.parseInt(id),admin,materials)) {
 			return"出库失败";
 		}
 		changeNotifyState();
+		
 		return "出库成功";
 	}
 	

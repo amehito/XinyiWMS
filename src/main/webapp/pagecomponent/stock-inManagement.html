@@ -2,126 +2,142 @@
 <!DOCTYPE html>
 <html>
 
-	<head>
-		<meta charset="UTF-8">
-		<title></title>
-		<link rel="stylesheet" type="text/css" href="css/bootstrap.css"/>
-	<style type="text/css">
-		table {
-				width: 100%;
-			}
-		#imageForm{
-			visibility: hidden;
-		}
-			input {
-				width: 100%;
-			}
-			.supplier{
-				width:100%;
-				height: 100px;
-				position: absolute;
-				display: block;
-			}
-			#inputGroup{
-				width:80%;
-				margin: 0 auto;
-			}
-			.subInput{
-				width:70px;
-				position: absolute;
-			}
-		}
-   
-		</style>
-	</head>
+<head>
+<meta charset="UTF-8">
+<title></title>
+<link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+<style type="text/css">
+table {
+	width: 100%;
+}
 
-	<body>
+#imageForm {
+	visibility: hidden;
+}
+
+input {
+	width: 100%;
+}
+
+.supplier {
+	width: 100%;
+	height: 100px;
+	position: absolute;
+	display: block;
+}
+
+#inputGroup {
+	width: 80%;
+	margin: 0 auto;
+}
+
+.subInput {
+	width: 70px;
+	position: absolute;
+}
+}
+</style>
+</head>
+
+<body>
 	<div class="panel panel-default">
-    <div class="row" >
-         
-         <div class="input-group" id="inputGroup">
-		  <div class="input-group-btn">
-		    <!-- Buttons -->
-		    <button class="btn btn-info" id="editManufacturer">厂家</button>
-		    <button class="btn btn-danger" id="editSupplier">供应商</button>
-		    
-		  </div>
-		  <input type="text" class="form-control" id="supplierName">
-		</div>
-         
-         
-      </div>
-    	<div class="row" id="supplier">
-    	   <div class="col-md-1" >
-            <h5>供应商：</h5> 
-         </div>
-  	      
-    	</div>
-    	
-    	<div class="row" id="manufacturer">
-    		<div class="col-md-1" >
-          	  <h5>厂商：</h5> 
-          	</div>     
-	  	     
-        	      
-        </div>
-    
-			<form action="">
-				<table class="table table-bordered">
-					<thead>
-						<tr>
-							<td><strong>机料物代码</strong></td>
-							<td>亚伦代码</td>
-							<td><strong>机料物名</strong></td>
-							<td>物料种类</td>
-							<td>仓库位置</td>
-							<td><strong>入库数量</strong></td>
-							<td><strong>含税价</strong></td>
-							<td>单价</td>
-							<td>税率</td>
-							<td>规格</td>
-							<td>税金</td>
-							<td>不含税金</td>
-							<td>含税金额</td>
-							<td>单位</td>
-							<td>批次号</td>
-							<td>供应商</td>
-							<td>厂商</td>
-							<td>备注</td>
-						</tr>
-					</thead>
-					
-					<tbody id='tbody'>
-						<tr>
-							<td><input type="" name=""></td>
-							<td><input type="" name=""></td>
-							<td><input type="" name="" class="auto" oninput="searchForFill(this.value,event)"></td>
-							<td><input type="" name=""></td>
-							<td><input type="" name=""></td>
-							<td><input type="" name="" oninput="fillMoneyInput()"></td>
-							<td><input type="" name="" oninput="fillMoneyInput()"></td>
-							<td><input type="" name=""></td>
-							<td><input type="" name="" value="13" oninput="fillMoneyInput()"></td>
-							<td><input type="" name=""></td>
-							<td><input type="" name=""></td>
-							<td><input type="" name=""></td>
-							<td><input type="" name=""></td>
-							<td><input type="" name=""></td>
-							<td><input type="" name=""></td>
-							<td><input type="" name=""></td>
-							<td><input type="" name=""></td>
-							<td><input type="" name=""></td>
-						</tr>
+		<div class="row">
 
-					</tbody>
+			<div class="input-group" id="inputGroup">
+				<div class="input-group-btn">
+					<!-- Buttons -->
+					<button class="btn btn-info" id="editManufacturer">厂家</button>
+					<button class="btn btn-danger" id="editSupplier">供应商</button>
 
-				</table>
-			</form>
-			<button class="btn btn-primary" onclick="submitData()">提交</button>
-			<button class="btn btn-info" onclick="addTable()">添加</button>
+				</div>
+				<input type="text" class="form-control" id="supplierName">
+			</div>
+
+
 		</div>
-		<script>
+		<div class="row" id="supplier">
+			<div class="col-md-1">
+				<h5>供应商：</h5>
+			</div>
+
+		</div>
+
+		<div class="row" id="manufacturer">
+			<div class="col-md-1">
+				<h5>厂商：</h5>
+			</div>
+
+
+		</div>
+
+		<form action="">
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<td><strong>机料物代码</strong></td>
+						<td>亚伦代码</td>
+						<td><strong>机料物名</strong></td>
+						<td>物料种类</td>
+						<td>仓库位置</td>
+						<td><strong>入库数量</strong></td>
+						<td><strong>含税价</strong></td>
+						<td>单价</td>
+						<td>税率</td>
+						<td>规格</td>
+						<td>税金</td>
+						<td>不含税金</td>
+						<td>含税金额</td>
+						<td>单位</td>
+						<td>批次号</td>
+						<td>供应商</td>
+						<td>厂商</td>
+						<td>备注</td>
+					</tr>
+				</thead>
+
+				<tbody id='tbody'>
+					<tr>
+						<td><input type="" name=""></td>
+						<td><input type="" name=""></td>
+						<td><input type="" name="" class="auto"
+							oninput="searchForFill(this.value,event)"></td>
+						<td><input type="" name=""></td>
+						<td><input type="" name=""></td>
+						<td><input type="" name="" oninput="fillMoneyInput()"></td>
+						<td><input type="" name="" oninput="fillMoneyInput()"></td>
+						<td><input type="" name=""></td>
+						<td><input type="" name="" value="13"
+							oninput="fillMoneyInput()"></td>
+						<td><input type="" name=""></td>
+						<td><input type="" name=""></td>
+						<td><input type="" name=""></td>
+						<td><input type="" name=""></td>
+						<td><input type="" name=""></td>
+						<td><input type="" name=""></td>
+						<td><input type="" name=""></td>
+						<td><input type="" name=""></td>
+						<td><input type="" name=""></td>
+					</tr>
+
+				</tbody>
+
+			</table>
+		</form>
+		<button class="btn btn-primary" onclick="submitData()">提交</button>
+		<button class="btn btn-info" onclick="addTable()">添加</button>
+		<div>
+			<div id="imageForm">
+				<img id="materialImg" src="./media/icons/error-icon.png"
+					class="img-rounded" alt="Responsive image" width="200px"
+					height="200px"> <input type="file" name="file" id="file1"
+					class="btn "><br> <input type="submit" value="提交"
+					id="uploadBtn" onclick="uploadImage()" class="subInput">
+			</div>
+		</div>
+	</div>
+	<script>
 		const tableWidth = 18;
+		let deleteRowList = [];
 		let globeRow ;
 		let batchManage = new Date().toString().split(' ').join('').slice(0,20);
 			let fill = `<tr>
@@ -285,36 +301,27 @@
 				}
 			})
 		}
-			function addTable() {
-				let allInput = document.querySelectorAll('table input');
-
-				for(let i=0;i<allInput.length/tableWidth;i++){
-					allInput[i*tableWidth+14].value = batchManage;
-				}
-				let childNode = document.createElement('tr');
-				childNode.innerHTML = fill;
-				document.querySelector('tbody').appendChild(childNode);
-			  	fillInit();
-
+			//添加一列
+		function addTable() {
+			let childNode = document.createElement('tr');
+			childNode.innerHTML = fill;
+			document.querySelector('tbody').appendChild(childNode);
+		  	fillInit();
+			let allInput = document.querySelectorAll('table input');
+		  	for(let i=0;i<allInput.length/tableWidth;i++){
+				allInput[i*tableWidth+14].value = batchManage;
 			}
-      function fillInit(){ 
-    	  let inputs = document.querySelectorAll('table input');
-    	
-    	  let item=inputs.length/tableWidth-1;	
-    	//	  	inputs[i*tableWidth+0].addEventListener('blur',addTable);
-  			inputs[item*tableWidth+8].value=13;	
-  	        inputs[item*tableWidth+8].addEventListener('input',fillMoneyInput);
-  	        inputs[item*tableWidth+6].addEventListener('input',fillMoneyInput);
-  	        inputs[item*tableWidth+5].addEventListener('input',fillMoneyInput); 
-	  	    
-    	  
-        //添加事件监听
- 
-      }
+		}
+        function fillInit(){ 
+   	        let inputs = document.querySelectorAll('table input');
+   		    let item=inputs.length/tableWidth-1;	
+		    inputs[item*tableWidth+8].value=13;	
+            inputs[item*tableWidth+8].addEventListener('input',fillMoneyInput);
+            inputs[item*tableWidth+6].addEventListener('input',fillMoneyInput);
+            inputs[item*tableWidth+5].addEventListener('input',fillMoneyInput); 
+          	inputs[item*tableWidth+1].parentElement.parentElement.addEventListener('click',clickToChangeImage);
+      	}
 	  
-    /* allMaterial.forEach(function(item){
-      arr.push(item.materialId);
-    }) */
       
 
       function searchForFill(id,event){
@@ -400,7 +407,32 @@
             inputs[i*tableWidth+12].value = number * priceIncludeTax;		
     	  }
       }
+     	function clickToChangeImage(event) {
+  			document.querySelectorAll('#tbody tr').forEach(item=>{item.style.background='white'});
+     		let target ;
+  			switch (event.srcElement.tagName) {
+			case 'INPUT':
+				console.log(1);
+				event.srcElement.parentElement.parentElement.style.background='#f2f2f2';
+				target = event.srcElement.parentElement.parentElement;	
+				break;
+			case 'TD':
+				event.srcElement.parentElement.style.background='#f2f2f2';
+				target = event.srcElement.parentElement;
+				break;
+			case 'TR':
+				event.srcElement.style.background='#f2f2f2';
+				target = event.srcElement;
+				break;
+			default:
+				break;
+			}
+     		
+     		
+		}
 		function pageInit(){
+			//第一行添加事件监听，可以触发鼠标点击切换图片事件
+			document.querySelector('table tr input').parentElement.parentElement.addEventListener('click',clickToChangeImage);
 			deleteRowInit();
 			let father = document.querySelector('#supplier');
 			let father2 = document.querySelector('#manufacturer');
@@ -501,17 +533,20 @@
 	        btn.style.width='100px';
 	        btn.style.height='50px';
 	        btn.addEventListener('click',()=>{
-				switch (that.srcElement.parentElement.tagName) {
+				deleteRowList.forEach(item=>item.remove());
+	        });
+	        
+	        //把右键的元素加入列表中
+			switch (that.srcElement.parentElement.tagName) {
 				case 'TD':
-					that.srcElement.parentElement.parentElement.remove();
+					deleteRowList.push(that.srcElement.parentElement.parentElement);
 					break;
 
 				case 'TR':
-					that.srcElement.parentElement.remove();
+					deleteRowList.push(that.srcElement.parentElement);
 					break;
-				}
-	        });
-
+			}
+	        console.log(deleteRowList);
 		}
       	
       
@@ -522,9 +557,13 @@
       	//删除一行
       	function deleteRowInit() {
       		//屏蔽右键属性框
-      		document.addEventListener('click',()=>{
-      			document.querySelector('#deleteBtn')==null?'':document.querySelector('#deleteBtn').remove();
-      			document.querySelectorAll('#tbody tr').forEach(item=>{item.style.background='white'});
+      		document.addEventListener('click',(event)=>{
+      			
+      			if(event.srcElement.tagName != 'TR' && event.srcElement.tagName != 'TD' && event.srcElement.tagName != 'INPUT'){
+	      			document.querySelector('#deleteBtn')==null?'':document.querySelector('#deleteBtn').remove();
+	      			document.querySelectorAll('#tbody tr').forEach(item=>{item.style.background='white'});
+	      			deleteRowList = deleteRowList.slice(0,0);
+      			}
       		})
       		document.querySelector('#tbody').oncontextmenu=function(){return false};
       		document.querySelector('#tbody').addEventListener('mouseup',function(event){
@@ -554,15 +593,9 @@
 		window.onload=pageInit();
 
 		</script>
-	
- 	<div>
-		<div id="imageForm">
-		<img id="materialImg" src="./media/icons/error-icon.png" class="img-rounded" alt="Responsive image" width="200px" height="200px">
-		<input type="file" name="file" id="file1" class="btn "><br>
-	    <input type="submit" value="提交" id="uploadBtn" onclick="uploadImage()" class="subInput">
-		</div>
-	</div>
 
-	</body>
+
+
+</body>
 
 </html>

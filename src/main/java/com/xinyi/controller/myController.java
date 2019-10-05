@@ -49,6 +49,10 @@ import com.xinyi.utils.MybatisOfSpringUtil;
 @Controller
 public class myController {
 	
+	@RequestMapping("/")
+	public void toLogin(HttpServletResponse response) throws IOException {
+		response.sendRedirect("login.html");
+	}
 	@RequestMapping("/upload")
 	public void saveUploadFiles(DefaultMultipartHttpServletRequest request  ) {
 		
@@ -101,7 +105,7 @@ public class myController {
 		} catch (AuthenticationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return "";
+			return "LoginWrong";
 		}
 		httpSession.setAttribute("UserName", user.getUsername());
 		SqlSession sqlSession = MybatisOfSpringUtil.getSessionFactory().openSession();

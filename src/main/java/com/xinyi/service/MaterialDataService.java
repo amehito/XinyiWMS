@@ -1,6 +1,7 @@
 package com.xinyi.service;
 
 
+import java.io.Console;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -151,11 +152,37 @@ public class MaterialDataService {
 		ArrayList<XinyiPicking> list =(ArrayList<XinyiPicking>) mapper.selectByExample(example );
 		return list;
 	}
-	
-	public   boolean passRequest(int id,String admin) {
+	private void InitData(int id, ArrayList<Material> materials) {
+		// TODO Auto-generated method stub
+		XinyiPickingMapper mapper = sqlSession.getMapper(XinyiPickingMapper.class);
+		String data = mapper.selectByPrimaryKey(id).getMaterials();
+		com.alibaba.fastjson.JSONArray jsonArray = com.alibaba.fastjson.JSONArray.parseArray(data);
+		for(int i=0;i<jsonArray.size();i++) {
+			com.alibaba.fastjson.JSONObject object = jsonArray.getJSONObject(i);
+		    for(Material m:materials) {
+		    	if(m.getMaterialId().equals(object.get("materialId"))) {
+		    		System.out.println("修改前 "+object.get("materialId")+" 的值：" + object.get("number"));
+		    		object.put("number", m.getNumber());
+		    	}
+		    }
+    		System.out.println("修改后 "+object.get("materialId")+" 的值：" + object.get("number"));
+		}
+		XinyiPicking record = mapper.selectByPrimaryKey(id);
+		record.setMaterials(jsonArray.toJSONString());
+		mapper.updateByPrimaryKeySelective(record);
+		sqlSession.commit();
+		
+	}
+	public   boolean passRequest(int id,String admin, ArrayList<Material> materials) {
 		// TODO Auto-generated method stub
 		XinyiPickingMapper mapper = sqlSession.getMapper(XinyiPickingMapper.class);
 	    XinyiBatchStockMapper stockMapper = sqlSession.getMapper(XinyiBatchStockMapper.class);
+	 
+	    //先修改传进来的值
+		InitData(id,materials);
+
+	    //
+	    
 	    
 		try {
 			List<Material> list = new ArrayList<Material>();
@@ -272,6 +299,7 @@ public class MaterialDataService {
 		return true;
 		
 	}
+	
 	
 	
 	private   void updateBatchStock() {
@@ -430,6 +458,7 @@ public class MaterialDataService {
 		// TODO Auto-generated method stub
 		return jsonCreater.writeValueAsString((imageMapper.selectAll()));
 	}
+	
 	
 	
 	

@@ -47,7 +47,7 @@ public class ShiroConfiguration {
 		
 		//未授权界面;
 		shiroFilterFactoryBean.setUnauthorizedUrl("/nopermissions.html");
-
+		shiroFilterFactoryBean.setLoginUrl("login.html");
 		//拦截器.
 		//Map<String,String> filterChainDefinitionMap = new LinkedHashMap<String,String>();
 		//自定义拦截器
@@ -58,16 +58,6 @@ public class ShiroConfiguration {
         Map<String ,String> filterChainDefinitionMap = new LinkedHashMap<>();
 		
 		//配置映射关系
-//        /Material/* = anon
-//		/OtherInfo/* = rolesOr["admin","user"]
-//		/test/* = anon
-//		/account/* = anon
-//		/picking.html = anon
-//		/login-page.html = anon
-//		/login.html=anon
-//		/subLogin = anon
-//			/mainPage = rolesOr["admin","user"]
-//		/*  = authc
 		filterChainDefinitionMap.put("/images/*", "anon");
 		filterChainDefinitionMap.put("/videos/*", "anon");
 		filterChainDefinitionMap.put("/OtherInfo/*", "anon");
