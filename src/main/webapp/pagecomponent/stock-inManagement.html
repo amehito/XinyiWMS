@@ -427,8 +427,17 @@ input {
 			default:
 				break;
 			}
-     		
-     		
+  			console.log(1)
+  			console.log({target});
+			if(target.children[2].children[0].value!=''){
+				let targetArr = allImageUrlInfo.filter(item => item.materialId == target.children[0].children[0].value)[0];
+				if(targetArr!=undefined){
+					changeImageUrl(targetArr.imageName);
+				}
+				else{
+					document.querySelector('#materialImg').src = './media/icons/error-icon.png';
+				}
+			}     		
 		}
 		function pageInit(){
 			//第一行添加事件监听，可以触发鼠标点击切换图片事件
