@@ -2,20 +2,20 @@ const ms = 1000;
 let info  ;
 let globalId;
 let materialInfo = [];
-var a={"admin":"admin","time":"2019-07-19","materials":[{"material":"DN20铝塑对节","materialId":"21270302001","number":1,"unit":"只"},{"material":"2-4kw立式电动机","materialId":"16060115002","number":1,"unit":"台"},{"material":"2路继电器座","materialId":"11020102001","number":1,"unit":"只"},{"material":"剪刀","materialId":"10000000001","number":1,"unit":"个"},{"material":"4-7.5kw立式电机","materialId":"16060117001","number":12,"unit":"台"}]};
+let a={"admin":"admin","time":"2019-07-19","materials":[{"material":"DN20铝塑对节","materialId":"21270302001","number":1,"unit":"只"},{"material":"2-4kw立式电动机","materialId":"16060115002","number":1,"unit":"台"},{"material":"2路继电器座","materialId":"11020102001","number":1,"unit":"只"},{"material":"剪刀","materialId":"10000000001","number":1,"unit":"个"},{"material":"4-7.5kw立式电机","materialId":"16060117001","number":12,"unit":"台"}]};
 function seeInformation(id){
 	globalId = id;
 	a = info.filter((item) =>  (item.id === id));
 	console.log({a,info});
 	
-	var userName=document.getElementById('userName').innerText=a[0].name;
-	var time=document.getElementById('time').innerText=a[0].time;
-	var information=document.getElementById('information');
+	let userName=document.getElementById('userName').innerText=a[0].name;
+	let time=document.getElementById('time').innerText=a[0].time;
+	let information=document.getElementById('information');
 	information.innerHTML="";
 	let json = eval(a[0].materials);
 	console.log({json});
 	materialInfo = [];
-	for(var i=0;i<json.length;i++){
+	for(let i=0;i<json.length;i++){
 		
 		information.innerHTML+="<tr align=center>"+
 				"<td>"+json[i].material+"</td>"+

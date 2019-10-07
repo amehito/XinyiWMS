@@ -11,6 +11,17 @@ table {
 	width: 100%;
 }
 
+.materialImgModal{
+	width: 95%;
+	height:95%;
+	position: absolute;
+}
+
+.modalBody{
+	width:600px;
+	height: 400px;
+}
+
 #imageForm {
 	visibility: hidden;
 }
@@ -387,6 +398,7 @@ input {
 		try {
 	        let url = allImageUrlInfo.filter(item => item.materialId == id)[0].imageName;
 	        document.querySelector('#materialImg').src = '/images/'+url;
+	        document.querySelector('#materialImgModal').src = '/images/'+url;
 		} catch (e) {
 			// TODO: handle exception
 		}        
@@ -440,8 +452,13 @@ input {
 			}     		
 		}
 		function pageInit(){
-			//第一行添加事件监听，可以触发鼠标点击切换图片事件
+			//第一行添加事件监听，可以触发鼠标点击机物料名切换图片事件
 			document.querySelector('table tr input').parentElement.parentElement.addEventListener('click',clickToChangeImage);
+			//添加点击图片放大
+			document.querySelector('#materialImg').addEventListener('click',()=>{
+				$('#myModal').modal('show');
+			});
+			
 			deleteRowInit();
 			let father = document.querySelector('#supplier');
 			let father2 = document.querySelector('#manufacturer');
@@ -603,7 +620,15 @@ input {
 
 		</script>
 
-
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body" style="width: 600px;height: 400px" >
+        <img alt="没有图片" src="" id="materialImgModal" class="materialImgModal">
+      </div>
+    </div>
+  </div>
+</div>
 
 </body>
 
