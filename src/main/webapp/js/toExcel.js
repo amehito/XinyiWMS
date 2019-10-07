@@ -1,4 +1,5 @@
  //json数据转excel
+
 function JSONToExcelConvertor(JSONData, FileName) {  
     //先转化json  
     var arrData = typeof JSONData != 'object' ? JSON.parse(JSONData) : JSONData;  
@@ -58,7 +59,7 @@ function JSONToExcelConvertor(JSONData, FileName) {
 
     link.style = "visibility:hidden";  
     link.download = FileName + ".xls";  
-
+    
     document.body.appendChild(link);  
     link.click();  
     document.body.removeChild(link);  
