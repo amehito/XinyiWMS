@@ -51,6 +51,11 @@
     	$('#editModal').modal("show");
     	globeRow = row;
     }
+    
+    function showDetail() {
+		
+	}
+    
     function uploadImage(){
     	let row = globeRow;
     	let formData = new FormData();
@@ -123,7 +128,7 @@
 	            title : '剩余数量',
 	           	formatter:function(value,row,index){
 	           	
-	           		var s = `<button class="btn btn-success" type="button">
+	           		var s = ` <button class="btn btn-success" type="button">
 	           				${"${value}"}
 	          			 	 </button>`;
 	          		
@@ -137,6 +142,23 @@
 	           		
 	           	},events:{
 	           		
+	           	}
+	        },{
+	            field : '',
+	            title : '详细内容',
+	           	formatter:function(value,row,index){
+	           	
+	           		var s = `<button class="btn btn-danger showDetail" type="button" >
+	           				详细内容
+	          			 	 </button>           		
+	           		return s;
+	           			
+	           		
+	           	},events:{
+	           		'click .showDetail' : function(e, value,
+							row, index) {
+						showDetail(row);
+	           		}
 	           	}
 	        },
 	        {
