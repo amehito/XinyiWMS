@@ -50,10 +50,62 @@
     function editPicture(row){
     	$('#editModal').modal("show");
     	globeRow = row;
+    	console.log(12);
     }
     
-    function showDetail() {
+    function showDetail(row) {
+    	console.log({row});
+    	console.log(row.materialId);
+		let detailHtml = ``;
+    	document.querySelector('#detailDiv').innerHTML = `
+			<div>
+				<p><Strong>机物料ID: </Strong> </p>
+				<input value='${"${row.materialId}"} 'disabled='disabled' />
+			</div>
+			<div>
+			<p><Strong>亚纶Id:  </Strong> </p>
+			<input value='${"${row.viceId}"} 'disabled='disabled' />
+		</div>
+			<div>
+			<p><Strong>机物料名字:</Strong> </p>
+			<input value='${"${row.materialName}"} 'disabled='disabled' />
+		</div>
+		<div>
+			<p><Strong>修改时间: </Strong> </p>
+			<input value='${"${row.finishTime}"} 'disabled='disabled' />
+		</div>
+		<div>
+			<p><Strong>价格:    </Strong> </p>
+			<input value='${"${row.materialPrice}"} 'disabled='disabled' />
+		</div>
+		<div>
+			<p><Strong>单位:    </Strong> </p>
+			<input value='${"${row.materialUnit}"} 'disabled='disabled' />
+		</div>
+		<div>
+			<p><Strong>类型:</Strong> </p>
+			<input value='${"${row.materialType}"} 'disabled='disabled' />
+		</div>
+		<div>
+			<p><Strong>型号:</Strong> </p>    
+			<input value='${"${row.materialSpec}"} 'disabled='disabled' />
+		</div>
+		<div>
+			<p><Strong>库存:    </Strong> </p>
+			<input value='${"${row.stockNumber}"} 'disabled='disabled' />
+		</div>
+		<div>
+			<p><Strong>安全库存:  </Strong> </p>
+			<input value='${"${row.stockSafe}"} 'disabled='disabled' />
+		</div>
+		<div>
+			<p><Strong>备注:  </Strong> </p>
+			<input value='${"${row.plus}"} 'disabled='disabled' />
+		</div>
 		
+		`;
+    	$('#detailModal').modal("show");
+
 	}
     
     function uploadImage(){
@@ -144,25 +196,28 @@
 	           		
 	           	}
 	        },{
-	            field : '',
-	            title : '详细内容',
+	        	field : '0',
+	            title : '详细信息',
 	           	formatter:function(value,row,index){
 	           	
-	           		var s = `<button class="btn btn-danger showDetail" type="button" >
-	           				详细内容
-	          			 	 </button>           		
+	           		var s = `<button class="btn btn-info showDetail" type="button" >
+	           				详细信息
+	          			 	 </button>`;	           		
 	           		return s;
 	           			
 	           		
-	           	},events:{
+	           	},
+	           	events:{
 	           		'click .showDetail' : function(e, value,
 							row, index) {
 						showDetail(row);
+						console.log(1234);
+						
 	           		}
 	           	}
 	        },
 	        {
-	            field : '',
+	            field : '1',
 	            title : '图片',
 	           	formatter:function(value,row,index){
 	           	
@@ -175,16 +230,22 @@
 	           			
 	           		
 	           	},events:{
+	           		
 	           		'click .showPic' : function(e, value,
 							row, index) {
 						showPicture(row);
+						
 	           		},
+	           		
+	           		
+	           		
 	           		'click .editPic' : function(e ,value,
 	           				row, index){
 	           			editPicture(row);
 	           		}
 	           	}
-	        }],
+	        }
+			],
 	        
 	        url:'Material/getMaterialInfo',
 	        sortable: true,   
@@ -355,4 +416,30 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- DetailModal -->
+<div class="modal fade" id="detailModal" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel"></h4>
+			</div>
+			<div class="modal-body">
+				<div id="detailDiv"></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id=""
+					data-dismiss="modal">确认</button>
+				<button type="button" class="btn btn-info" id=""
+					data-dismiss="modal">编辑</button>
+
+			</div>
+		</div>
+	</div>
 </div>
