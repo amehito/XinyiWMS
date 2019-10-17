@@ -14,7 +14,7 @@
  </style>
  <script>
  	let allImageInfo = [];
- 	let globeRow ;
+ 	let globalRow ;
  	
  	function getAllInfo(){
  		fetch('Material/ImageInfo')
@@ -42,7 +42,6 @@
         datePickerInit();
         userOperationRecordTableInit();
         searchActionInit();
-    	detailModalInit();
     })
 	
     function showPicture(row){
@@ -54,8 +53,7 @@
     }
     function editPicture(row){
     	$('#editModal').modal("show");
-    	globeRow = row;
-    	console.log(12);
+    	globalRow = row;
     }
     function editState(){
     	document.querySelectorAll('#detailModal input').forEach(item=>{item.disabled=''});
@@ -64,12 +62,17 @@
 			onclick = 'cancelEditDetail()'>取消</button><button type="button" class="btn btn-danger modalLeft" id=""
 			onclick = 'deleteThisMaterial()'>删除</button>`;
     }
-    
+    function confirmDelMaterial() {
+		let row = globalRow;
+		console.log({row});
+	}
     function detailModalInit() {
     	document.querySelector('#detailModal .modal-footer').innerHTML =`
     		<button type="button" class="btn btn-info" id=""
 			onclick = 'editState()'>编辑</button>
     	`;
+    	document.querySelectorAll('#detailModal input').forEach(item=>{item.disabled='desabled'});
+    	
 	}
     function modifyEditDetail() {
     	detailModalInit();
@@ -78,12 +81,11 @@
     	detailModalInit();
 	}
     function deleteThisMaterial() {
-		$('#myModalLabel').modal("show");
+		$('#deleteModal').modal("show");
 	}
     function showDetail(row) {
-    	console.log({row});
-    	console.log(row.materialId);
-		let detailHtml = ``;
+    	detailModalInit();
+    	globalRow = row;
     	document.querySelector('#detailDiv').innerHTML = `
 			<div>
 				<p><Strong>机物料ID: </Strong> </p>
@@ -136,7 +138,7 @@
 	}
     
     function uploadImage(){
-    	let row = globeRow;
+    	let row = globalRow;
     	let formData = new FormData();
         formData.append("file", document.getElementById("file1").files[0]); 
         formData.append("id",row.materialId);
@@ -469,7 +471,7 @@
 </div>
 
 <!-- 确认是否删除Modal -->
-<div class="modal fade" id="export_modal" table-index="-1" role="dialog"
+<div class="modal fade" id="deleteModal" table-index="-1" role="dialog"
 	aria-labelledby="myModalLabel" aria-hidden="true"
 	data-backdrop="static">
 	<div class="modal-dialog">
@@ -488,7 +490,7 @@
 				<button class="btn btn-default" type="button" data-dismiss="modal">
 					<span>取消</span>
 				</button>
-				<button class="btn btn-danger" type="button" id="confirmDeleteMaterial">
+				<button class="btn btn-danger" type="button" id="confirmDeleteMaterial" onclick="confirmDelMaterial()">
 					<span>确定删除</span>
 				</button>
 			</div>
