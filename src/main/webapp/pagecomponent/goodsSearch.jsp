@@ -7,6 +7,10 @@
  		height:100%;
  		position: relative;
  	}
+ 	.modalLeft{
+ 		left:0px;
+ 		position: absolute;
+ 	}
  </style>
  <script>
  	let allImageInfo = [];
@@ -38,6 +42,7 @@
         datePickerInit();
         userOperationRecordTableInit();
         searchActionInit();
+    	detailModalInit();
     })
 	
     function showPicture(row){
@@ -52,7 +57,29 @@
     	globeRow = row;
     	console.log(12);
     }
+    function editState(){
+    	document.querySelectorAll('#detailModal input').forEach(item=>{item.disabled=''});
+    	document.querySelector('#detailModal .modal-footer').innerHTML = `<button type="button" class="btn btn-primary" id=""
+			onclick = 'modifyEditDetail()'>确定</button><button type="button" class="btn btn-info" id=""
+			onclick = 'cancelEditDetail()'>取消</button><button type="button" class="btn btn-danger modalLeft" id=""
+			onclick = 'deleteThisMaterial()'>删除</button>`;
+    }
     
+    function detailModalInit() {
+    	document.querySelector('#detailModal .modal-footer').innerHTML =`
+    		<button type="button" class="btn btn-info" id=""
+			onclick = 'editState()'>编辑</button>
+    	`;
+	}
+    function modifyEditDetail() {
+    	detailModalInit();
+	}
+    function cancelEditDetail() {
+    	detailModalInit();
+	}
+    function deleteThisMaterial() {
+		$('#myModalLabel').modal("show");
+	}
     function showDetail(row) {
     	console.log({row});
     	console.log(row.materialId);
@@ -102,7 +129,7 @@
 			<p><Strong>备注:  </Strong> </p>
 			<input value='${"${row.plus}"} 'disabled='disabled' />
 		</div>
-		
+		 
 		`;
     	$('#detailModal').modal("show");
 
@@ -434,11 +461,36 @@
 				<div id="detailDiv"></div>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-primary" id=""
-					data-dismiss="modal">确认</button>
-				<button type="button" class="btn btn-info" id=""
-					data-dismiss="modal">编辑</button>
+				
 
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- 确认是否删除Modal -->
+<div class="modal fade" id="export_modal" table-index="-1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true"
+	data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button class="close" type="button" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel">确认删除</h4>
+			</div>
+			<div class="modal-body">
+				<div class="col-md-8 col-sm-8">
+					<h3>是否删除</h3>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-default" type="button" data-dismiss="modal">
+					<span>取消</span>
+				</button>
+				<button class="btn btn-danger" type="button" id="confirmDeleteMaterial">
+					<span>确定删除</span>
+				</button>
 			</div>
 		</div>
 	</div>
