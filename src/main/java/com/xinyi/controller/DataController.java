@@ -97,6 +97,12 @@ public class DataController {
 		return "拒绝成功";
 	}
 	
+	@RequestMapping(value="/DeleteMaterialById",produces="application/json;charset=utf-8")
+	public @ResponseBody String deleteMaterialById(@RequestParam(value="materialId") String id,HttpSession session) throws JsonProcessingException {
+		System.out.println(id);
+		return jsonCreater.writeValueAsString(materialDataService.DeleteMaterialById(id));
+	}
+	
 	@RequestMapping(value="/passRequest",produces="application/json;charset=utf-8")
 	public @ResponseBody String passRequest(HttpSession session,@RequestParam(value="globalId") String id,HttpServletRequest request)  {
 		String admin = (String) session.getAttribute("UserName");

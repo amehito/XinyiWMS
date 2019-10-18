@@ -458,6 +458,20 @@ public class MaterialDataService {
 		// TODO Auto-generated method stub
 		return jsonCreater.writeValueAsString((imageMapper.selectAll()));
 	}
+	public String DeleteMaterialById(String id) {
+		// TODO Auto-generated method stub
+		XinyiMaterialMapper mapper = sqlSession.getMapper(XinyiMaterialMapper.class);
+		try {
+			mapper.deleteByPrimaryKey(id);
+			sqlSession.commit();
+			return "DeleteMaterialSucceed";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			
+			e.printStackTrace();
+			return "DeleteMaterialFailed";
+		}
+	}
 	
 	
 	

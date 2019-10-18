@@ -65,6 +65,35 @@
     function confirmDelMaterial() {
 		let row = globalRow;
 		console.log({row});
+		$.ajax({
+			type: "POST",
+			url: "Material/DeleteMaterialById",//提交的接口
+			ContentType:'application/json',
+			data: {
+				/*传值*/
+				materialId:row.materialId
+			},
+			success:function(response){
+				if(response =='DeleteMaterialSucceed'){
+					alert('删除成功');
+					$('#deleteModal').modal('hide');
+					$('#detailModal').modal('hide');
+					$.ajax({
+						url:'Material/getMaterialInfo',
+						method:'post',
+						success:function(response){						
+						$('#userOperationRecordTable').bootstrapTable('load', response);
+
+						}
+					});
+				}
+				else{
+					alert('删除失败，请稍后再试');
+				}
+			},
+			error:function(response){
+			}
+		});
 	}
     function detailModalInit() {
     	document.querySelector('#detailModal .modal-footer').innerHTML =`
@@ -78,6 +107,54 @@
     	detailModalInit();
 	}
     function cancelEditDetail() {
+    	let row = globalRow;
+    	document.querySelector('#detailDiv').innerHTML = `
+			<div>
+				<p><Strong>机物料ID: </Strong> </p>
+				<input value='${"${row.materialId}"} 'disabled='disabled' />
+			</div>
+			<div>
+			<p><Strong>亚纶Id:  </Strong> </p>
+			<input value='${"${row.viceId}"} 'disabled='disabled' />
+		</div>
+			<div>
+			<p><Strong>机物料名字:</Strong> </p>
+			<input value='${"${row.materialName}"} 'disabled='disabled' />
+		</div>
+		<div>
+			<p><Strong>修改时间: </Strong> </p>
+			<input value='${"${row.finishTime}"} 'disabled='disabled' />
+		</div>
+		<div>
+			<p><Strong>价格:    </Strong> </p>
+			<input value='${"${row.materialPrice}"} 'disabled='disabled' />
+		</div>
+		<div>
+			<p><Strong>单位:    </Strong> </p>
+			<input value='${"${row.materialUnit}"} 'disabled='disabled' />
+		</div>
+		<div>
+			<p><Strong>类型:</Strong> </p>
+			<input value='${"${row.materialType}"} 'disabled='disabled' />
+		</div>
+		<div>
+			<p><Strong>型号:</Strong> </p>    
+			<input value='${"${row.materialSpec}"} 'disabled='disabled' />
+		</div>
+		<div>
+			<p><Strong>库存:    </Strong> </p>
+			<input value='${"${row.stockNumber}"} 'disabled='disabled' />
+		</div>
+		<div>
+			<p><Strong>安全库存:  </Strong> </p>
+			<input value='${"${row.stockSafe}"} 'disabled='disabled' />
+		</div>
+		<div>
+			<p><Strong>备注:  </Strong> </p>
+			<input value='${"${row.plus}"} 'disabled='disabled' />
+		</div>
+		 
+		`;
     	detailModalInit();
 	}
     function deleteThisMaterial() {
