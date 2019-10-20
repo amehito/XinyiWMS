@@ -369,7 +369,13 @@ public class MaterialDataService {
 					material.setStockSafe(item.getImportNumber());
 					material.setBatchManage(item.getBatchManage());
 					material.setStartTime(new Date());
-					material.setCreateManager((String) session.getAttribute("UserName"));
+					if(session.getAttribute("UserName")==null) {
+						material.setCreateManager("admin");
+					}
+					else{
+						material.setCreateManager((String) session.getAttribute("UserName"));
+					}
+						
 					materialMapper.insert(material);
 					
 				}
@@ -470,6 +476,22 @@ public class MaterialDataService {
 			
 			e.printStackTrace();
 			return "DeleteMaterialFailed";
+		}
+	}
+	public String modifyMaterialProperty(XinyiMaterial material) {
+		// TODO Auto-generated method stub
+		System.out.println(material.getMaterialId());
+		XinyiMaterialMapper materialMapper = sqlSession.getMapper(XinyiMaterialMapper.class);
+		try {
+			materialMapper.updateByPrimaryKey(material);
+			System.out.println(material.getViceId());
+			return "modifyMaterialPropertySucceed";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "modifyMaterialPropertyfailed";
+		}finally {
+			sqlSession.commit();
 		}
 	}
 	

@@ -103,6 +103,11 @@ public class DataController {
 		return jsonCreater.writeValueAsString(materialDataService.DeleteMaterialById(id));
 	}
 	
+	@RequestMapping(value="modifyMaterialProperty",produces="application/json;charset=utf-8")
+	public @ResponseBody String modifyMaterialProperty(@RequestBody XinyiMaterial material) throws JsonProcessingException {
+		return jsonCreater.writeValueAsString(materialDataService.modifyMaterialProperty(material));
+	}
+	
 	@RequestMapping(value="/passRequest",produces="application/json;charset=utf-8")
 	public @ResponseBody String passRequest(HttpSession session,@RequestParam(value="globalId") String id,HttpServletRequest request)  {
 		String admin = (String) session.getAttribute("UserName");

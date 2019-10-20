@@ -57,6 +57,7 @@
     }
     function editState(){
     	document.querySelectorAll('#detailModal input').forEach(item=>{item.disabled=''});
+    	document.querySelectorAll('#detailModal input').forEach(item => item.value = item.value.trim());
     	document.querySelector('#detailModal .modal-footer').innerHTML = `<button type="button" class="btn btn-primary" id=""
 			onclick = 'modifyEditDetail()'>确定</button><button type="button" class="btn btn-info" id=""
 			onclick = 'cancelEditDetail()'>取消</button><button type="button" class="btn btn-danger modalLeft" id=""
@@ -78,14 +79,7 @@
 					alert('删除成功');
 					$('#deleteModal').modal('hide');
 					$('#detailModal').modal('hide');
-					$.ajax({
-						url:'Material/getMaterialInfo',
-						method:'post',
-						success:function(response){						
-						$('#userOperationRecordTable').bootstrapTable('load', response);
-
-						}
-					});
+					reloadTable();
 				}
 				else{
 					alert('删除失败，请稍后再试');
@@ -95,15 +89,68 @@
 			}
 		});
 	}
+    function reloadTable() {
+    	$.ajax({
+			url:'Material/getMaterialInfo',
+			method:'post',
+			success:function(response){						
+			$('#userOperationRecordTable').bootstrapTable('load', response);
+
+			}
+		});
+	}
     function detailModalInit() {
     	document.querySelector('#detailModal .modal-footer').innerHTML =`
     		<button type="button" class="btn btn-info" id=""
 			onclick = 'editState()'>编辑</button>
     	`;
     	document.querySelectorAll('#detailModal input').forEach(item=>{item.disabled='desabled'});
-    	
+
 	}
     function modifyEditDetail() {
+    	const row = globalRow;
+    	console.log({row})
+    	let nowDate = new Date();
+    	let time = `${nowDate.getFullYear()}-${nowDate.getMonth}-${nowDate.getDate}`;
+    	let material = {
+    		'batchManage':row.batchManage,
+			'changeManager':row.changeManager,
+			'changeTime':row.changeTime,
+			'createManager':row.createManager,
+			'finance':row.finance,
+			'finishTime':row.finishTime,
+			'materialId':document.querySelector('#materialIdInput').value.trim(),
+			'materialName':document.querySelector('#materialNameInput').value.trim(),
+			'materialPrice':document.querySelector('#priceInput').value.trim(),
+			'materialSpec':document.querySelector('#materialSpecInput').value.trim(),
+			'materialType':document.querySelector('#materialTypeInput').value.trim(),
+			'materialUnit':document.querySelector('#unitInput').value.trim(),
+			'plus':document.querySelector('#plusInput').value.trim(),
+			'startTime':row.startTime,
+			'status':row.status,
+			'stockNumber':document.querySelector('#stockNumberInput').value.trim(),
+			'stockSafe':document.querySelector('#stockSafeInput').value.trim(),
+			'viceId':document.querySelector('#viceIdInput').value.trim(),
+			'warehousePosition':document.querySelector('#warehousePositionInput').value.trim(),
+    	}
+    	console.log({material});
+    	$.ajax({
+			type: "POST",
+			url: "Material/modifyMaterialProperty",//提交的接口
+			contentType:'application/json;charset=utf-8',
+			data:JSON.stringify(material),
+			success:function(response){
+				if(response=="modifyMaterialPropertySucceed"){
+					reloadTable();
+					alert('修改成功');
+				}
+				else{
+					alert('网络繁忙，请稍后再试');
+				}
+			},
+			error:function(response){
+			}
+		});
     	detailModalInit();
 	}
     function cancelEditDetail() {
@@ -111,47 +158,51 @@
     	document.querySelector('#detailDiv').innerHTML = `
 			<div>
 				<p><Strong>机物料ID: </Strong> </p>
-				<input value='${"${row.materialId}"} 'disabled='disabled' />
+				<input id='materialIdInput' value='${"${row.materialId}"} 'disabled='disabled' />
 			</div>
 			<div>
 			<p><Strong>亚纶Id:  </Strong> </p>
-			<input value='${"${row.viceId}"} 'disabled='disabled' />
+			<input id='viceIdInput' value='${"${row.viceId}"} 'disabled='disabled' />
 		</div>
 			<div>
 			<p><Strong>机物料名字:</Strong> </p>
-			<input value='${"${row.materialName}"} 'disabled='disabled' />
+			<input id='materialNameInput' value='${"${row.materialName}"} 'disabled='disabled' />
+		</div>
+		<div>
+		<p><Strong>仓库位置: </Strong> </p>
+		<input id='warehousePositionInput' value='${"${row.warehousePosition}"} 'disabled='disabled' />
 		</div>
 		<div>
 			<p><Strong>修改时间: </Strong> </p>
-			<input value='${"${row.finishTime}"} 'disabled='disabled' />
+			<input id='changeTimeInput' value='${"${row.finishTime}"} 'disabled='disabled' />
 		</div>
 		<div>
-			<p><Strong>价格:    </Strong> </p>
-			<input value='${"${row.materialPrice}"} 'disabled='disabled' />
+			<p><Strong>参考价:    </Strong> </p>
+			<input id='priceInput' value='${"${row.materialPrice}"} 'disabled='disabled' />
 		</div>
 		<div>
 			<p><Strong>单位:    </Strong> </p>
-			<input value='${"${row.materialUnit}"} 'disabled='disabled' />
+			<input id='unitInput' value='${"${row.materialUnit}"} 'disabled='disabled' />
 		</div>
 		<div>
 			<p><Strong>类型:</Strong> </p>
-			<input value='${"${row.materialType}"} 'disabled='disabled' />
+			<input id='materialTypeInput' value='${"${row.materialType}"} 'disabled='disabled' />
 		</div>
 		<div>
 			<p><Strong>型号:</Strong> </p>    
-			<input value='${"${row.materialSpec}"} 'disabled='disabled' />
+			<input id='materialSpecInput' value='${"${row.materialSpec}"} 'disabled='disabled' />
 		</div>
 		<div>
 			<p><Strong>库存:    </Strong> </p>
-			<input value='${"${row.stockNumber}"} 'disabled='disabled' />
+			<input id='stockNumberInput' value='${"${row.stockNumber}"} 'disabled='disabled' />
 		</div>
 		<div>
 			<p><Strong>安全库存:  </Strong> </p>
-			<input value='${"${row.stockSafe}"} 'disabled='disabled' />
+			<input id='stockSafeInput' value='${"${row.stockSafe}"} 'disabled='disabled' />
 		</div>
 		<div>
 			<p><Strong>备注:  </Strong> </p>
-			<input value='${"${row.plus}"} 'disabled='disabled' />
+			<input id='plusInput' value='${"${row.plus}"} 'disabled='disabled' />
 		</div>
 		 
 		`;
@@ -163,50 +214,54 @@
     function showDetail(row) {
     	detailModalInit();
     	globalRow = row;
-    	document.querySelector('#detailDiv').innerHTML = `
+    	document.querySelector('#detailDiv').innerHTML =  `
 			<div>
-				<p><Strong>机物料ID: </Strong> </p>
-				<input value='${"${row.materialId}"} 'disabled='disabled' />
+			<p><Strong>机物料ID: </Strong> </p>
+			<input id='materialIdInput' value='${"${row.materialId}"} 'disabled='disabled' />
 			</div>
 			<div>
 			<p><Strong>亚纶Id:  </Strong> </p>
-			<input value='${"${row.viceId}"} 'disabled='disabled' />
+			<input id='viceIdInput' value='${"${row.viceId}"} 'disabled='disabled' />
 		</div>
 			<div>
 			<p><Strong>机物料名字:</Strong> </p>
-			<input value='${"${row.materialName}"} 'disabled='disabled' />
+			<input id='materialNameInput' value='${"${row.materialName}"} 'disabled='disabled' />
+		</div>
+		<div>
+		<p><Strong>仓库位置: </Strong> </p>
+		<input id='warehousePositionInput' value='${"${row.warehousePosition}"} 'disabled='disabled' />
 		</div>
 		<div>
 			<p><Strong>修改时间: </Strong> </p>
-			<input value='${"${row.finishTime}"} 'disabled='disabled' />
+			<input id='changeTimeInput' value='${"${row.finishTime}"} 'disabled='disabled' />
 		</div>
 		<div>
-			<p><Strong>价格:    </Strong> </p>
-			<input value='${"${row.materialPrice}"} 'disabled='disabled' />
+			<p><Strong>参考价:    </Strong> </p>
+			<input id='priceInput' value='${"${row.materialPrice}"} 'disabled='disabled' />
 		</div>
 		<div>
 			<p><Strong>单位:    </Strong> </p>
-			<input value='${"${row.materialUnit}"} 'disabled='disabled' />
+			<input id='unitInput' value='${"${row.materialUnit}"} 'disabled='disabled' />
 		</div>
 		<div>
 			<p><Strong>类型:</Strong> </p>
-			<input value='${"${row.materialType}"} 'disabled='disabled' />
+			<input id='materialTypeInput' value='${"${row.materialType}"} 'disabled='disabled' />
 		</div>
 		<div>
 			<p><Strong>型号:</Strong> </p>    
-			<input value='${"${row.materialSpec}"} 'disabled='disabled' />
+			<input id='materialSpecInput' value='${"${row.materialSpec}"} 'disabled='disabled' />
 		</div>
 		<div>
 			<p><Strong>库存:    </Strong> </p>
-			<input value='${"${row.stockNumber}"} 'disabled='disabled' />
+			<input id='stockNumberInput' value='${"${row.stockNumber}"} 'disabled='disabled' />
 		</div>
 		<div>
 			<p><Strong>安全库存:  </Strong> </p>
-			<input value='${"${row.stockSafe}"} 'disabled='disabled' />
+			<input id='stockSafeInput' value='${"${row.stockSafe}"} 'disabled='disabled' />
 		</div>
 		<div>
 			<p><Strong>备注:  </Strong> </p>
-			<input value='${"${row.plus}"} 'disabled='disabled' />
+			<input id='plusInput' value='${"${row.plus}"} 'disabled='disabled' />
 		</div>
 		 
 		`;

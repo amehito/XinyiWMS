@@ -65,7 +65,14 @@ public class myController {
         encodeQrcode("123", response);
    }
 	
-	
+	@RequestMapping(value="/checkOnline")
+	@ResponseBody
+	public String checkInline(HttpSession session) {
+		if(session.getAttribute("UserName")==null)
+			return "outline";
+		else 
+			return "online";
+	}
 	 private void encodeQrcode(String content, HttpServletResponse response) {    
 	        if (StringUtils.isEmpty(content))        return;    
 	        MultiFormatWriter multiFormatWriter = new MultiFormatWriter();    
