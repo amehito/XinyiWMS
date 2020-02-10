@@ -211,8 +211,10 @@ public class MaterialDataService {
 			    criteria.andMaterialidEqualTo((String) object.get("materialId"));
 			    List<XinyiBatchStock> stockList = stockMapper.selectByExample(stockExample);
 			    int _num = num;
+			   
 			    double totalPrice = 0;
 			    System.out.println(stockList.size());
+			    
 			    for(XinyiBatchStock item:stockList) {
 			    	
 			    	if(item.getNumber()==0 && stockList.size()>=2) {
@@ -280,11 +282,36 @@ public class MaterialDataService {
 
 			    	}
 			    }
+			    if(_num!=0) {
+			    	
+			    	//_num不为0说明出库了库存里没收录的机物料，取平均价出库
+			    	Material materialJson = new Material();
+			    	
+		    		
+		    		
+		    		materialJson.setTaxRate(material.getPlus());
+				    materialJson.setManufacturing("未入库");
+				    materialJson.setSupplier("未入库");
+				    materialJson.setPrice(material.getMaterialPrice());
+				    materialJson.setMaterialSpec(material.getMaterialSpec());
+				    materialJson.setWarehousePosition(material.getWarehousePosition());
+				    materialJson.setSize(material.getMaterialType());
+				    materialJson.setTotalPrice(_num*material.getMaterialPrice());
+				    materialJson.setMaterialId(materialId);
+				    materialJson.setNumber(_num);
+				    materialJson.setMaterial((String) object.get("material"));
+				    materialJson.setUnit((String) object.get("unit"));
+				    materialJson.setBatch("未入库");
+				    list.add(materialJson);
+					sqlSession.commit();
+			    	
+			    }
 			    //将价格添加到json中
 			    System.out.println("totalPrice"+totalPrice);
 			    System.out.println("materialnum:"+num+"  _num:"+_num);
 			   
 			}
+			
 			String factJson = jsonCreater.writeValueAsString(list);
 			record.setFactMaterials(factJson);
 			mapper.updateByPrimaryKeySelective(record);
@@ -496,6 +523,9 @@ public class MaterialDataService {
 	}
 	
 	
-	
+	public String getLastOne() {
+		XinyiImportMapper xinyiImportMapper = sqlSession.getMapper(XinyiImportMapper.class);
+		return xinyiImportMapper.selectLastOne().getBatchManage();
+	}
 	
 }

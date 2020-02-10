@@ -66,7 +66,7 @@ public class OthersController {
 		File[] files = file.listFiles();
 		int num = 0;
 		for(File f:files) {
-			if(f.getName().endsWith("mp4")) {
+			if(f.getName().endsWith("mp4") ) {
 				String url = "../videos/"+f.getName();
 				out.println("<a href='"+url+"'>"+f.getName()+"</a></br>");
 				num++;

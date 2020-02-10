@@ -168,6 +168,7 @@
 		$('#userOperationRecordTable').bootstrapTable('load', json);
 	}
 	function filterDate(time,search_start_date,search_end_date){
+		console.log({time})
 		let [year,month,day] = time.substring(0,10).split('-');
 		let startDate = search_start_date.split('-');
 		let endDate = search_end_date.split('-');

@@ -1,4 +1,4 @@
-
+<script src="./js/monthToNumber.js"></script>
 <script>
     // 查询参数
     
@@ -6,7 +6,7 @@
     search_start_date = null
     search_end_date = null
 	let data;
-    
+    let chooseRowList = [];
     	
 	
     $(function(){
@@ -14,6 +14,7 @@
         userOperationRecordTableInit();
         searchActionInit();
         exportStorageAction();
+        chooseRowInit();
     })
 
     // 日期选择器初始化
@@ -31,7 +32,90 @@
 			minView:2
 		});
 	}
+    //右键选择初始化
+    function chooseRowInit() {
+  		//屏蔽右键属性框
+  		document.addEventListener('click',(event)=>{
+  			
+  			if(event.srcElement.tagName != 'TR' && event.srcElement.tagName != 'TD' && event.srcElement.tagName != 'INPUT'){
+      			document.querySelector('#chooseBtn')==null?'':document.querySelector('#deleteBtn').remove();
+      			document.querySelectorAll('#userOperationRecordTable tr').forEach(item=>{item.style.background='white'});
+      			chooseRowList = chooseRowList.slice(0,0);
+  			}
+  		})
+  		document.querySelector('#userOperationRecordTable').oncontextmenu=function(){return false};
+  		document.querySelector('#userOperationRecordTable').addEventListener('mouseup',function(event){
+  			if(event.button==2){
+  				showButton(event);
+  			}
+  		});
+  		let timer = null;
+      	let startTime = '';
+      	let endTime = '';
+      	const label = document.querySelector('#userOperationRecordTable');
 
+      	label.addEventListener('touchstart', function () {
+      	  startTime = new Date() ;    
+      	});
+
+      	label.addEventListener('touchend', function (event) {
+      	  endTime = new Date();
+      	  console.log(endTime-startTime);
+      	  if (endTime - startTime > 300) {
+			showButton(event);
+			console.log(1);
+      	  }
+      	});
+	};
+	function showButton(ev) {
+  		document.querySelector('#deleteBtn')==null?'':document.querySelector('#deleteBtn').remove();
+        let oEvent=ev;
+        console.log(oEvent);
+        let oDiv=document.createElement('div');
+        console.log(oEvent.clientX==undefined);
+		//改变背景颜色
+		let tr = ev.target;
+		let flag = 0;
+		while(tr.tagName!='TR' && flag < 4){
+			flag++;
+			tr = tr.parentElement;
+		}
+		tr.style.background='#d1eeee';
+   //     oDiv.style.left=oEvent.clientX+'px';  // 指定创建的DIV在文档中距离左侧的位置
+     //   oDiv.style.top=oEvent.clientY+'px';  // 指定创建的DIV在文档中距离顶部的位置
+     	oDiv.style.left=oEvent.clientX==undefined?oEvent.changedTouches[0].pageX+'px':oEvent.pageX+'px';
+     	oDiv.style.top=oEvent.clientY==undefined?oEvent.changedTouches[0].pageY+'px':oEvent.pageY+'px';
+        oDiv.style.position='absolute'; // 为新创建的DIV指定绝对定位
+        oDiv.style.width='200px'; // 指定宽度
+        oDiv.style.height='200px'; // 指定高度
+        oDiv.id = 'deleteBtn';
+        oDiv.innerHTML = `<button class="btn" id='chooseBtn'>撤回</button>`;
+        document.body.appendChild(oDiv); 
+        oDiv.oncontextmenu=function(){return false};
+        let that = ev;
+        let btn = document.querySelector('#chooseBtn');
+        btn.style.width='100px';
+        btn.style.height='50px';
+        btn.addEventListener('click',()=>{
+			reIntoStock(chooseRowList);
+        });
+        
+        
+        //把右键的元素加入列表中
+		switch (that.srcElement.parentElement.tagName) {
+			case 'TD':
+				chooseRowList.push(that.srcElement.parentElement.parentElement);
+				break;
+
+			case 'TR':
+				chooseRowList.push(that.srcElement.parentElement);
+				break;
+		}
+        console.log(chooseRowList);
+	}
+	function reIntoStock(chooseRowList) {
+		
+	}
 	// 表格初始化
 	function userOperationRecordTableInit(){
 		fetch('Material/allImportInfo')
@@ -224,9 +308,15 @@
 	dateMap.set("Dec","12");
 	
 	function filterDate(batchManage,search_start_date,search_end_date){
-		let year = batchManage.substring(8,12);
-		let month = dateMap.get(batchManage.substring(3,6));
-		let day = batchManage.substring(6,8);
+		//J191118001,MonSep23201920:21:21
+		//let year = batchManage.substring(8,12);
+		//let month = dateMap.get(batchManage.substring(3,6));
+		//let day = batchManage.substring(6,8);
+
+		const month = batchManage.substring(3,5)
+		const year = `20${batchManage.substring(1,3)}`;
+		const day = batchManage.substring(5,7)
+		console.log(batchManage);
 		let startDate = search_start_date.split('-');
 		let endDate = search_end_date.split('-');
 		

@@ -109,6 +109,10 @@
   <select id="selectAll" resultMap="BaseResultMap">
   	select * from xinyi_import
   </select>
+  
+  <select id="selectLastOne" resultMap="BaseResultMap">
+  	select * from xinyi_import order by id desc limit 1
+  </select>
   <select id="selectByExample" parameterType="com.xinyi.bean.XinyiImportExample" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated

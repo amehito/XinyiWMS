@@ -169,6 +169,10 @@
 			<input id='materialNameInput' value='${"${row.materialName}"} 'disabled='disabled' />
 		</div>
 		<div>
+			<p><Strong>型号:</Strong> </p>    
+			<input id='materialSpecInput' value='${"${row.materialSpec}"} 'disabled='disabled' />
+		</div>
+		<div>
 		<p><Strong>仓库位置: </Strong> </p>
 		<input id='warehousePositionInput' value='${"${row.warehousePosition}"} 'disabled='disabled' />
 		</div>
@@ -188,10 +192,7 @@
 			<p><Strong>类型:</Strong> </p>
 			<input id='materialTypeInput' value='${"${row.materialType}"} 'disabled='disabled' />
 		</div>
-		<div>
-			<p><Strong>型号:</Strong> </p>    
-			<input id='materialSpecInput' value='${"${row.materialSpec}"} 'disabled='disabled' />
-		</div>
+		
 		<div>
 			<p><Strong>库存:    </Strong> </p>
 			<input id='stockNumberInput' value='${"${row.stockNumber}"} 'disabled='disabled' />
@@ -228,6 +229,10 @@
 			<input id='materialNameInput' value='${"${row.materialName}"} 'disabled='disabled' />
 		</div>
 		<div>
+			<p><Strong>型号:</Strong> </p>    
+			<input id='materialSpecInput' value='${"${row.materialSpec}"} 'disabled='disabled' />
+		</div>
+		<div>
 		<p><Strong>仓库位置: </Strong> </p>
 		<input id='warehousePositionInput' value='${"${row.warehousePosition}"} 'disabled='disabled' />
 		</div>
@@ -247,10 +252,7 @@
 			<p><Strong>类型:</Strong> </p>
 			<input id='materialTypeInput' value='${"${row.materialType}"} 'disabled='disabled' />
 		</div>
-		<div>
-			<p><Strong>型号:</Strong> </p>    
-			<input id='materialSpecInput' value='${"${row.materialSpec}"} 'disabled='disabled' />
-		</div>
+		
 		<div>
 			<p><Strong>库存:    </Strong> </p>
 			<input id='stockNumberInput' value='${"${row.stockNumber}"} 'disabled='disabled' />

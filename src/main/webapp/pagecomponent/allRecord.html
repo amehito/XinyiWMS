@@ -6,8 +6,21 @@
     search_start_date = null
     search_end_date = null
 	let data;
-    
-    	
+    let allArr = [];
+	let arrTemp = [];
+	let dateMap = new Map();
+	dateMap.set("Jan","01");
+	dateMap.set("Feb","02");
+	dateMap.set("Mar","03");
+	dateMap.set("Apr","04");
+	dateMap.set("May","05");
+	dateMap.set("Jun","06");
+	dateMap.set("Jul","07");
+	dateMap.set("Aug","08");
+	dateMap.set("Sep","09");
+	dateMap.set("Oct","10");
+	dateMap.set("Nov","11");
+	dateMap.set("Dec","12");
 	
     $(function(){
     	
@@ -15,6 +28,8 @@
         userOperationRecordTableInit();
         searchActionInit();
         exportStorageAction();
+    	tableRefresh("入库",'','');
+
     })
 
     // 日期选择器初始化
@@ -32,8 +47,7 @@
 			minView:2
 		});
 	}
-	let allArr = [];
-	let arrTemp = [];
+	
 	// 表格初始化
 	function userOperationRecordTableInit(){
 		let importData;
@@ -45,12 +59,13 @@
 			json = json.reverse();
 			importData = json;
 			function formatBatchToTime(it){
-				//WedAug07201916:25:31
+				console.log({it})
+				//WedAug07201916:25:31  J191811001
 				if(it==''){
 					return '未知';
 				}
 				let temp = dateMap.get(it.substring(3,6));
-				return `${it.substring(8,12)}-${dateMap.get(it.substring(3,6))}-${it.substring(6,8)} ${it.substring(12,14)}-${it.substring(15,17)}-${it.substring(18,20)}`;
+				return `20${it.substring(1,3)}-${it.substring(3,5)}-${it.substring(5,7)} `;
 			}
 			let importArr = importData.map((item)=>({"time":formatBatchToTime(item.batchManage),"batch":item.batchManage,"id":item.id,"number":item.importNumber,"manufacturing":item.manufacturing,"materialId":item.materialId,"materialName":item.materialName,"materialSpec":item.materialSpec,"plus":item.plus,"price":item.price,"priceIncludeTax":item.priceIncludeTax,"size":item.size,"supplier":item.supplier,"tax":item.tax,"taxRate":item.taxRate,"totalPrice":item.totalPrice,"totalPriceIncludeTax":item.totalPriceIncludeTax,"unit":item.unit,"viceId":item.viceId,"warehousePosition":item.warehousePosition,"status":"入库"}))
 			allArr.push(...importArr);
@@ -61,9 +76,9 @@
 				json = json.reverse();
 				pickingData = json;
 				let pickingArr = [];
-				json.filter((item)=>item.factMaterials!=undefined).map(item=>({"materials":item.factMaterials,"time":item.time})).forEach(item=>((eval(item.materials).forEach(it=>{it.time=item.time;pickingArr.push(it)}))));
-				pickingArr = pickingArr.map((item)=>({"time":item.time,"batch":item.batch,"id":item.materialId,"number":item.number,"manufacturing":item.manufacturing,"materialId":item.materialId,"materialName":item.material,"materialSpec":item.materialSpec,"plus":item.plus,"price":item.price*(1-item.taxRate/100),"priceIncludeTax":item.price,"size":item.size,"supplier":item.supplier,"tax":item.tax,"taxRate":item.taxRate,"totalPrice":item.totalPrice*(1-item.taxRate/100),"totalPriceIncludeTax":item.totalPrice,"unit":item.unit,"viceId":item.viceId,"warehousePosition":item.warehousePosition,"status":"出库"}))
-
+				json.filter((item)=>item.factMaterials!=undefined).map(item=>({"materials":item.factMaterials,"time":item.time,"name":item.name})).forEach(item=>((eval(item.materials).forEach(it=>{it.name = item.name ;it.time=item.time;pickingArr.push(it)}))));
+				pickingArr = pickingArr.map((item)=>({"name":item.name,"time":item.time,"batch":item.batch,"id":item.materialId,"number":item.number,"manufacturing":item.manufacturing,"materialId":item.materialId,"materialName":item.material,"materialSpec":item.materialSpec,"plus":item.plus,"price":item.price*(1-item.taxRate/100),"priceIncludeTax":item.price,"size":item.size,"supplier":item.supplier,"tax":item.tax,"taxRate":item.taxRate,"totalPrice":item.totalPrice*(1-item.taxRate/100),"totalPriceIncludeTax":item.totalPrice,"unit":item.unit,"viceId":item.viceId,"warehousePosition":item.warehousePosition,"status":"出库"}))
+				console.log({pickingArr})
 				allArr.push(...pickingArr);
 				arrTemp = allArr;
 				$('#userOperationRecordTable').bootstrapTable({
@@ -154,7 +169,11 @@
 			        },{
 			            field : 'plus',
 			            title : '备注'
-			        }
+			        },{
+			        	field : 'name',
+			        	title : '领料人'
+ 			        //	visible :false
+ 			        },
 			        ],
 			        data:allArr,
 			        method : 'GET',
@@ -167,6 +186,8 @@
 			    });
 			});
 		});	
+		
+
 	}
 	function rowDetailOperation(row) {
 		
@@ -185,13 +206,7 @@
 			</tr>`;
 		});
 		
-		/* information.innerHTML+="<tr align=center>"+
-		"<td>"+json[i].material+"</td>"+
-		"<td>"+json[i].materialId+"</td>"+
-		"<td>"+json[i].number+"</td>"+
-		"<td>"+json[i].unit+"</td>"+
-		"</tr>"; */
-		// load info
+	
 	
 	}
 		//导出excel
@@ -208,7 +223,17 @@
 		
 		}
 	// 表格刷新
+	function switchNameDisplay(flag){
+		if(flag){
+            $('#userOperationRecordTable').bootstrapTable('showColumn', 'name');
+			return ;
+		}
+        $('#userOperationRecordTable').bootstrapTable('hideColumn', 'name');
+
+		
+	}
 	function tableRefresh(search_id,search_start_date,search_end_date) {
+			search_id = search_id.trim()
 			json = allArr;
 			json=json.filter(function(item){
 				if(search_id == '' && search_start_date =='' && search_end_date ==''){
@@ -227,33 +252,29 @@
 				else{
 					console.log(4);
 					console.log({search_id,item});
-					return item.size == search_id && filterDate(item.time,search_start_date,search_end_date);
+					return (item.name == search_id || item.size == search_id ) && filterDate(item.time,search_start_date,search_end_date);
 				}										
 			})
 			arrTemp = json;
-			$('#userOperationRecordTable').bootstrapTable('load', json);
-
+			if(search_id!='出库'){
+				//隐藏领料人
+				switchNameDisplay(false);
+				$('#userOperationRecordTable').bootstrapTable('load', json);
+			}
+			else{
+				switchNameDisplay(true);
+				$('#userOperationRecordTable').bootstrapTable('load', json);
+			}
 	
 		
 	}
-	let dateMap = new Map();
-	dateMap.set("Jan","01");
-	dateMap.set("Feb","02");
-	dateMap.set("Mar","03");
-	dateMap.set("Apr","04");
-	dateMap.set("May","05");
-	dateMap.set("Jun","06");
-	dateMap.set("Jul","07");
-	dateMap.set("Aug","08");
-	dateMap.set("Sep","09");
-	dateMap.set("Oct","10");
-	dateMap.set("Nov","11");
-	dateMap.set("Dec","12");
+	
 	
 	function filterDate(time,search_start_date,search_end_date){
 		let year = time.substring(0,4);
 		let month = time.substring(5,7);
 		let day = time.substring(8,10);
+		console.log({time})
 		let startDate = search_start_date.split('-');
 		let endDate = search_end_date.split('-');
 		let nowtime = parseInt(`${year}${month}${day}`);

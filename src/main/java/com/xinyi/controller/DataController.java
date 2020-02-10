@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xinyi.bean.XinyiImport;
 import com.xinyi.bean.XinyiMaterial;
 import com.xinyi.bean.XinyiPicking;
+import com.xinyi.dao.XinyiImportMapper;
 import com.xinyi.service.MaterialDataService;
 import com.xinyi.test.Material;
 import com.xinyi.test.notifyModel;
@@ -35,7 +36,8 @@ import com.xinyi.test.notifyModel;
 public class DataController {
 	@Autowired
 	MaterialDataService materialDataService;
-	
+	@Autowired
+	XinyiImportMapper XinyiImportMapper;
 	
 	notifyModel notify;
 	final static int  materialInfoNumber = 5;
@@ -184,9 +186,10 @@ public class DataController {
         	notify.setBaoxiuId(params.get("baoxiu_id")[0]);
         }catch (Exception e) {
 			// TODO: handle exception
-        	e.printStackTrace();
+        	
 		}
         System.out.println("baoxiu_id"+notify.getBaoxiuId());
+        
         notify.setAdmin(params.get("user")[0]);
         notify.setTime(format.parse(params.get("Time")[0]));
  //       System.out.println(notify.getAdmin());
@@ -212,6 +215,7 @@ public class DataController {
         	materialList.add(material);
         }
         notify.setMaterials(materialList);
+        
         materialDataService.savePickRequest(notify);
         list.add(notify);
         changeNotifyState();
@@ -265,6 +269,13 @@ public class DataController {
 		materialDataService.addChangeHistory(info);
 		System.out.println("controlresult"+result);
 		return result;
+	}
+	
+	@RequestMapping(value="/getLastBatch",produces="application/json;charset=utf-8")
+	@ResponseBody
+	public String getLastBatch() throws JsonProcessingException {
+		
+		return materialDataService.getLastOne();
 	}
 	
 	

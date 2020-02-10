@@ -79,4 +79,6 @@ public interface XinyiImportMapper {
 	int updateByPrimaryKey(XinyiImport record);
 	
 	public List<XinyiImport> selectAll();
+	
+	XinyiImport selectLastOne();
 }

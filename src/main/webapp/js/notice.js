@@ -84,7 +84,6 @@ let receive = function(){
 			showNotification(text);
 		},
 		error:function(data){
-			let text = data;
 		}
 	});
 }
@@ -117,11 +116,11 @@ document.querySelector('#identifyExport').addEventListener('click',function(){
 			},
 			success:function(response){
 				alert("提交成功");
-				location.replace(location);
+				location.reload()
 			},
 			error:function(response){
 				alert("提交成功");
-				location.replace(location);
+				location.reload()
 			}
 		});
 });
