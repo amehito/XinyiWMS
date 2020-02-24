@@ -260,8 +260,11 @@ pageEncoding="UTF-8"%>
                                     <li class="list-group-item">
                                         <a href="javascript:void(0)" id="" class="menu_item" name="pagecomponent/stock-inManagement.html">入库</a>
                                     </li>
-                                    <li class="list-group-item" >
+                                   <!--  <li class="list-group-item" >
                                         <a  href="javascript:void(0)" id="" class="menu_item" name="pagecomponent/stock-outManagement.jsp">出库</a>
+                                    </li> -->
+                                    <li class="list-group-item" >
+                                        <a id="exportItem" href="javascript:void(0)" id="" class="menu_item" name="">出库</a>
                                     </li>
                                     <li class="list-group-item">
                                         <a href="javascript:void(0)" id="" class="menu_item" name="pagecomponent/allRecord.html">记录汇总</a>
@@ -294,9 +297,9 @@ pageEncoding="UTF-8"%>
                                 <li class="list-group-item">
                                     <a href="javascript:void(0)" id="" class="menu_item" name="pagecomponent/addUser.jsp">添加用户</a>
                                 </li>
-                                <li class="list-group-item">
+                                <!-- <li class="list-group-item">
                                     <a href="javascript:void(0)" id="" class="menu_item" name="pagecomponent/manageKits.jsp">修改配件</a>
-                                </li>
+                                </li> -->
                                     
                                 
                             </ul>

@@ -11,6 +11,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.apache.ibatis.session.SqlSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,11 +45,21 @@ public class MaterialDataService {
 	 XinyiImportMapper testMapper;
 	@Autowired
 	XinyiImageMapper imageMapper;
+	@Autowired
+	XinyiModifyhistoryMapper modifyhistoryMapper;
+	@Autowired
+	XinyiPickingMapper pickingMapper;
+	@Autowired
+	XinyiBatchStockMapper stockMapper;
+	@Autowired
+	XinyiImportMapper importMapper;
 	public static ObjectMapper jsonCreater = new ObjectMapper();
-	static SqlSession sqlSession = MybatisOfSpringUtil.getSessionFactory().openSession();
 	public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-	static XinyiMaterialMapper materialMapper = sqlSession.getMapper(XinyiMaterialMapper.class);
 
+//	static SqlSession sqlSession = MybatisOfSpringUtil.getSessionFactory().openSession();
+//	static XinyiMaterialMapper materialMapper = materialMapper;
+	@Autowired
+	XinyiMaterialMapper materialMapper;
 	public   String getMaterialInfo() throws JsonProcessingException {	
 		ArrayList<XinyiMaterial> list = (ArrayList<XinyiMaterial>) materialMapper .selectAll();	
 		jsonCreater.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
@@ -57,11 +68,12 @@ public class MaterialDataService {
 		return result; 
 		
 	}
+	
 	public   String getmodifyhistoryInfo() throws JsonProcessingException {
 		// TODO Auto-generated method stub
 		
-		XinyiModifyhistoryMapper mapper = sqlSession.getMapper(XinyiModifyhistoryMapper.class);
-		ArrayList<XinyiModifyhistory> list = (ArrayList<XinyiModifyhistory>) mapper.selectAll();	
+		//XinyiModifyhistoryMapper mapper = sqlSession.getMapper(XinyiModifyhistoryMapper.class);
+		ArrayList<XinyiModifyhistory> list = (ArrayList<XinyiModifyhistory>) modifyhistoryMapper.selectAll();	
 		jsonCreater.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
 		String result = jsonCreater.writeValueAsString(list);
 		return result;
@@ -69,7 +81,7 @@ public class MaterialDataService {
 	public   String changematerialnumber(XinyiMaterial info) {
 		System.out.println(info.getStockNumber());
 		int num =info.getStockNumber() ;
-		XinyiMaterialMapper mapper = sqlSession.getMapper(XinyiMaterialMapper.class);
+	//	XinyiMaterialMapper mapper = materialMapper;
 		XinyiMaterial record = new XinyiMaterial();
 		record.setStockNumber(num);
 	//	mapper.updateByExampleSelective(record, example);
@@ -83,24 +95,24 @@ public class MaterialDataService {
 		info.setCreateManager("测试数据");
 		String result = "插入成功";
 		// TODO Auto-generated method stub
-		XinyiMaterialMapper mapper = sqlSession.getMapper(XinyiMaterialMapper.class);
+	//	XinyiMaterialMapper mapper = materialMapper;
 		try {
-			mapper.insert(info);
+			materialMapper.insert(info);
 		}catch (Exception e) {
 			// TODO: handle exception
-			mapper.updateByPrimaryKeySelective(info);
+			materialMapper.updateByPrimaryKeySelective(info);
 			result  = "已经存在该信息,以将值修改为最新的";
 			System.out.println(e.toString());
 		}
-		finally {
-			sqlSession.commit();
-		}
+//		finally {
+//			//sqlSession.commit();
+//		}
 		
 		return result;
 	}
 	public   void addChangeHistory(XinyiMaterial info) {
 		// TODO Auto-generated method stub
-		XinyiModifyhistoryMapper mapper = sqlSession.getMapper(XinyiModifyhistoryMapper.class);
+//		XinyiModifyhistoryMapper mapper = sqlSession.getMapper(XinyiModifyhistoryMapper.class);
 		XinyiModifyhistory record = new XinyiModifyhistory();
 		record.setMaterialid(info.getMaterialId());
 		record.setMaterialname(info.getMaterialName());
@@ -109,14 +121,14 @@ public class MaterialDataService {
 		record.setModifymanager(info.getCreateManager());
 		record.setModifyname("存入");
 		record.setModifytime(new Date());
-		mapper.insert(record );
-		sqlSession.commit();
+		modifyhistoryMapper.insert(record );
+	//	//sqlSession.commit();
 		
 	}
 	public   void savePickRequest(notifyModel notify) throws ParseException, JsonProcessingException {
 		// TODO Auto-generated method stub
 		try {
-			XinyiPickingMapper mapper = sqlSession.getMapper(XinyiPickingMapper.class);
+//			XinyiPickingMapper mapper = pickingMapper;
 			XinyiPicking record = new XinyiPicking();
 			System.out.println("admin:"+notify.getAdmin());
 			record.setBaoxiuId(notify.getBaoxiuId());
@@ -129,8 +141,8 @@ public class MaterialDataService {
 		//	record.setMaterials("测试");
 			System.out.println("material:"+maString);
 
-			mapper.insertSelective(record);
-			sqlSession.commit();
+			pickingMapper.insertSelective(record);
+		//	//sqlSession.commit();
 			
 			System.out.println("savePickRequest:");
 		}catch(Exception e) {
@@ -142,20 +154,20 @@ public class MaterialDataService {
 	public   ArrayList<XinyiPicking> getUncompletes() {
 		// TODO Auto-generated method stub
 		
-		XinyiPickingMapper mapper = sqlSession.getMapper(XinyiPickingMapper.class);
+	//	XinyiPickingMapper mapper = pickingMapper;
 		
 		XinyiPickingExample example = new XinyiPickingExample();
 		com.xinyi.bean.XinyiPickingExample.Criteria criteria = example.createCriteria();
 		criteria.andPlusEqualTo("未通过");
-		sqlSession.clearCache();
+//		sqlSession.clearCache();
 		
-		ArrayList<XinyiPicking> list =(ArrayList<XinyiPicking>) mapper.selectByExample(example );
+		ArrayList<XinyiPicking> list =(ArrayList<XinyiPicking>) pickingMapper.selectByExample(example );
 		return list;
 	}
 	private void InitData(int id, ArrayList<Material> materials) {
 		// TODO Auto-generated method stub
-		XinyiPickingMapper mapper = sqlSession.getMapper(XinyiPickingMapper.class);
-		String data = mapper.selectByPrimaryKey(id).getMaterials();
+//		XinyiPickingMapper mapper = sqlSession.getMapper(XinyiPickingMapper.class);
+		String data = pickingMapper.selectByPrimaryKey(id).getMaterials();
 		com.alibaba.fastjson.JSONArray jsonArray = com.alibaba.fastjson.JSONArray.parseArray(data);
 		for(int i=0;i<jsonArray.size();i++) {
 			com.alibaba.fastjson.JSONObject object = jsonArray.getJSONObject(i);
@@ -167,16 +179,16 @@ public class MaterialDataService {
 		    }
     		System.out.println("修改后 "+object.get("materialId")+" 的值：" + object.get("number"));
 		}
-		XinyiPicking record = mapper.selectByPrimaryKey(id);
+		XinyiPicking record = pickingMapper.selectByPrimaryKey(id);
 		record.setMaterials(jsonArray.toJSONString());
-		mapper.updateByPrimaryKeySelective(record);
-		sqlSession.commit();
+		pickingMapper.updateByPrimaryKeySelective(record);
+//		//sqlSession.commit();
 		
 	}
 	public   boolean passRequest(int id,String admin, ArrayList<Material> materials) {
 		// TODO Auto-generated method stub
-		XinyiPickingMapper mapper = sqlSession.getMapper(XinyiPickingMapper.class);
-	    XinyiBatchStockMapper stockMapper = sqlSession.getMapper(XinyiBatchStockMapper.class);
+		XinyiPickingMapper mapper = pickingMapper;
+//	    XinyiBatchStockMapper stockMapper = stockMapper;
 	 
 	    //先修改传进来的值
 		InitData(id,materials);
@@ -190,7 +202,7 @@ public class MaterialDataService {
 			record.setId(id);
 			record.setPlus(admin+"通过");
 			//修改材料表中的数量
-			XinyiMaterialMapper materialMapper = sqlSession.getMapper(XinyiMaterialMapper.class);
+//			XinyiMaterialMapper materialMapper = materialMapper;
 			XinyiMaterial material;
 			String data = mapper.selectByPrimaryKey(id).getMaterials();
 			com.alibaba.fastjson.JSONArray jsonArray = com.alibaba.fastjson.JSONArray.parseArray(data);
@@ -251,7 +263,7 @@ public class MaterialDataService {
 			    		item.setNumber(item.getNumber()-_num);
 			    		_num = 0;
 			    		stockMapper.updateByPrimaryKeySelective(item);
-						sqlSession.commit();
+//						//sqlSession.commit();
 
 			    		break;
 			    	}
@@ -278,7 +290,7 @@ public class MaterialDataService {
 					    item.setNumber(0);
 					    
 			    		stockMapper.updateByPrimaryKeySelective(item);
-						sqlSession.commit();
+//						//sqlSession.commit();
 
 			    	}
 			    }
@@ -303,7 +315,7 @@ public class MaterialDataService {
 				    materialJson.setUnit((String) object.get("unit"));
 				    materialJson.setBatch("未入库");
 				    list.add(materialJson);
-					sqlSession.commit();
+//					//sqlSession.commit();
 			    	
 			    }
 			    //将价格添加到json中
@@ -315,7 +327,7 @@ public class MaterialDataService {
 			String factJson = jsonCreater.writeValueAsString(list);
 			record.setFactMaterials(factJson);
 			mapper.updateByPrimaryKeySelective(record);
-			sqlSession.commit();
+			//sqlSession.commit();
 		    
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -335,13 +347,13 @@ public class MaterialDataService {
 	}
 	public   boolean declineRequest(int id, String admin) {
 		// TODO Auto-generated method stub
-		XinyiPickingMapper mapper = sqlSession.getMapper(XinyiPickingMapper.class);
+		XinyiPickingMapper mapper = pickingMapper;
 		try {
 			XinyiPicking record = new XinyiPicking();
 			record.setId(id);
 			record.setPlus(admin+"拒绝");
 			mapper.updateByPrimaryKeySelective(record);
-			sqlSession.commit();
+			//sqlSession.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			// TODO Auto-generated catch block
@@ -352,7 +364,7 @@ public class MaterialDataService {
 	}
 	public   String getAllRequestInfo() throws JsonProcessingException {
 		// TODO Auto-generated method stub
-		XinyiPickingMapper mapper = sqlSession.getMapper(XinyiPickingMapper.class);
+		XinyiPickingMapper mapper = pickingMapper;
 		jsonCreater.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH-mm-ss"));
 		String result = jsonCreater.writeValueAsString(mapper.selectAll());
 
@@ -360,13 +372,13 @@ public class MaterialDataService {
 	}
 	public   String saveList(List<XinyiImport> info,HttpSession session) {
 		// TODO Auto-generated method stub
-		XinyiImportMapper mapper = sqlSession.getMapper(XinyiImportMapper.class);
+		XinyiImportMapper mapper = importMapper;
 		jsonCreater.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH-mm-ss"));
 		try {
 			for(XinyiImport item : info) {
 				mapper.insert(item);
 			}
-			sqlSession.commit();
+			//sqlSession.commit();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -421,7 +433,7 @@ public class MaterialDataService {
 				}
 				
 			}
-			sqlSession.commit();
+			//sqlSession.commit();
 			//记录到库存表中
 			addToStockTable(info);
 		} catch (Exception e) {
@@ -434,7 +446,7 @@ public class MaterialDataService {
 	private   void addToStockTable(List<XinyiImport> info) {
 		// TODO Auto-generated method stub
 		XinyiBatchStock batchStock = new XinyiBatchStock();
-		XinyiBatchStockMapper mapper = sqlSession.getMapper(XinyiBatchStockMapper.class);
+		XinyiBatchStockMapper mapper = stockMapper;
 		for(XinyiImport item:info) {
 			batchStock.setBatch(item.getBatchManage());
 			batchStock.setMaterialid(item.getMaterialId());
@@ -446,13 +458,13 @@ public class MaterialDataService {
 			batchStock.setSupplier(item.getSupplier());
 			mapper.insert(batchStock);
 		}
-		sqlSession.commit();
+		//sqlSession.commit();
 	}
 	public  String getAllImportInfo() throws JsonProcessingException {
 		// TODO Auto-generated method stub
 		System.out.println(testMapper == null);
 		testMapper.selectAll();
-		XinyiImportMapper mapper = sqlSession.getMapper(XinyiImportMapper.class);
+		XinyiImportMapper mapper = importMapper;
 		List<XinyiImport> list  = mapper.selectAll();
 		jsonCreater.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
 		String result = jsonCreater.writeValueAsString(list);
@@ -461,7 +473,7 @@ public class MaterialDataService {
 	public   String getMaterialsByBaoxiuId(String id) throws JsonProcessingException {
 		// TODO Auto-generated method stub
 		System.out.println(id);
-		XinyiPickingMapper mapper = sqlSession.getMapper(XinyiPickingMapper.class);
+		XinyiPickingMapper mapper = pickingMapper;
 		XinyiPickingExample example = new XinyiPickingExample();
 		com.xinyi.bean.XinyiPickingExample.Criteria createCriteria = example.createCriteria();
 		createCriteria.andBaoxiuIdEqualTo(id);
@@ -473,8 +485,8 @@ public class MaterialDataService {
 		return jsonCreater.writeValueAsString(result);
 	}
 	public   String getAllRecord() {
-		XinyiPickingMapper pickingmapper = sqlSession.getMapper(XinyiPickingMapper.class);
-		XinyiImportMapper importMapper = sqlSession.getMapper(XinyiImportMapper.class);
+		XinyiPickingMapper pickingmapper = pickingMapper;
+//		XinyiImportMapper importMapper = importMapper;
 		List<XinyiPicking> pickingList =pickingmapper.selectAll();
 		List<XinyiImport> importList = importMapper.selectAll();
 		List<XinyiMaterial> MaterialList = new ArrayList<XinyiMaterial>();
@@ -493,10 +505,10 @@ public class MaterialDataService {
 	}
 	public String DeleteMaterialById(String id) {
 		// TODO Auto-generated method stub
-		XinyiMaterialMapper mapper = sqlSession.getMapper(XinyiMaterialMapper.class);
+		XinyiMaterialMapper mapper = materialMapper;
 		try {
 			mapper.deleteByPrimaryKey(id);
-			sqlSession.commit();
+			//sqlSession.commit();
 			return "DeleteMaterialSucceed";
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -508,7 +520,7 @@ public class MaterialDataService {
 	public String modifyMaterialProperty(XinyiMaterial material) {
 		// TODO Auto-generated method stub
 		System.out.println(material.getMaterialId());
-		XinyiMaterialMapper materialMapper = sqlSession.getMapper(XinyiMaterialMapper.class);
+//		XinyiMaterialMapper materialMapper = materialMapper;
 		try {
 			materialMapper.updateByPrimaryKey(material);
 			System.out.println(material.getViceId());
@@ -518,13 +530,13 @@ public class MaterialDataService {
 			e.printStackTrace();
 			return "modifyMaterialPropertyfailed";
 		}finally {
-			sqlSession.commit();
+			//sqlSession.commit();
 		}
 	}
 	
 	
 	public String getLastOne() {
-		XinyiImportMapper xinyiImportMapper = sqlSession.getMapper(XinyiImportMapper.class);
+		XinyiImportMapper xinyiImportMapper = importMapper;
 		return xinyiImportMapper.selectLastOne().getBatchManage();
 	}
 	

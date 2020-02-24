@@ -4,13 +4,18 @@ $(function() {
 	signOut();
 	getRequestPrefix();
 	homePage();
+	exportItemActionInit();
 });
 
 // 获取请求前缀
 function getRequestPrefix(){
 	requestPrefix = $('#requestPrefix').text();
 }
-
+function exportItemActionInit(){
+	$('#exportItem').click(function(){
+		window.open('./picking.html')
+	})
+}
 // 加载欢迎界面
 function welcomePageInit(){
 	$('#panel').load('pagecomponent/welcomePage.jsp');

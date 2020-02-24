@@ -49,7 +49,7 @@
     	let url = temp.length>0?temp[0].imageName:'';
     	console.log({url});
     	document.querySelector('#imgUrl').src = '/images/'+url;
-    	$('#myModal').modal("show");
+    	$('#imageModal').modal("show");
     }
     function editPicture(row){
     	$('#editModal').modal("show");
@@ -455,10 +455,14 @@
 
 	// 琛ㄦ牸鍒锋柊
 	
-
-	function tableRefresh(search_user_id) {
+	function formatId(str){
 		
-		let filterdata = [];
+	}
+	function tableRefresh(search_user_id) {
+		search_user_id = search_user_id.trim()
+		search_user_id = search_user_id.replace(/\*/g,'\\*')
+		console.log({search_user_id})
+		let filterdata = []
 		$.ajax({
 			url:'Material/getMaterialInfo',
 			method:'post',
@@ -543,12 +547,12 @@
 </div>
 
 <!-- modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel"></h4>
+        <h4 class="modal-title" id="imageModalLabel"></h4>
       </div>
       <div class="modal-body">
 		<img class='modalImg' id="imgUrl" src="./media/images/backgroundPic.png" alt="没有图片，请上传" class="img-rounded">
@@ -562,12 +566,12 @@
 </div>
 
 <!-- EditModal -->
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel"></h4>
+        <h4 class="modal-title" id="imageModalLabel"></h4>
       </div>
       <div class="modal-body">
 	    <input type="file" name="file" id="file1"><br>
@@ -583,7 +587,7 @@
 
 <!-- DetailModal -->
 <div class="modal fade" id="detailModal" tabindex="-1" role="dialog"
-	aria-labelledby="myModalLabel">
+	aria-labelledby="imageModalLabel">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -591,7 +595,7 @@
 					aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
-				<h4 class="modal-title" id="myModalLabel"></h4>
+				<h4 class="modal-title" id="imageModalLabel"></h4>
 			</div>
 			<div class="modal-body">
 				<div id="detailDiv"></div>
@@ -606,14 +610,14 @@
 
 <!-- 确认是否删除Modal -->
 <div class="modal fade" id="deleteModal" table-index="-1" role="dialog"
-	aria-labelledby="myModalLabel" aria-hidden="true"
+	aria-labelledby="imageModalLabel" aria-hidden="true"
 	data-backdrop="static">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button class="close" type="button" data-dismiss="modal"
 					aria-hidden="true">&times;</button>
-				<h4 class="modal-title" id="myModalLabel">确认删除</h4>
+				<h4 class="modal-title" id="imageModalLabel">确认删除</h4>
 			</div>
 			<div class="modal-body">
 				<div class="col-md-8 col-sm-8">

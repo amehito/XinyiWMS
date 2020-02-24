@@ -47,7 +47,7 @@
 				let res='';
 					if(item!=null){
 						item.forEach(function(it){
-						let str = ` #### <strong>ID：</strong>${it.materialId},<strong>名字：</strong>${it.material},<strong>数量：</strong>${it.number},<strong>单位：</strong>${it.unit},<strong>批次：</strong>${it.batch}`;
+						let str = `  <strong>ID：</strong>${it.materialId},<strong>名字：</strong>${it.material},<strong>数量：</strong>${it.number},<strong>单位：</strong>${it.unit},<strong>批次：</strong>${it.batch}</br>`;
 						res += str;
 						})
 			 	   }
@@ -206,7 +206,7 @@
 
 <div class="panel panel-default">
     <ol class="breadcrumb">
-        <li>系统日志</li>
+        <li>出库日志</li>
     </ol>
     <div class="panel-body">
         <div class="row">
