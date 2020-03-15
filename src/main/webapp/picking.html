@@ -93,7 +93,19 @@
 				</tr>
 				<tr align=center>
 					<td>领料人姓名:</td>
-					<td colspan="4"><input type="text" style="border: 0px;" value="" id="userName"/></td>
+					<td colspan="4">
+						<div>
+							<input style="width: 50%;" type="text" style="border: 0px;" value="" id="userName"/>
+							<select style="height: 1.8em;" id="fenchang">
+								<option selected disabled style="display: none;">请选择分厂</option>
+								<option value="总厂">总厂</option>
+								<option value="一分厂">一分厂</option>
+								<option value="二分厂">二分厂</option>
+								<option value="三分厂">三分厂</option>
+								<option value="四分厂">四分厂</option>
+							</select>
+						</div>
+					</td>
 					
 				</tr>
 				<tr align=center>
@@ -126,7 +138,7 @@
 			<button class="btnn" onclick="Submission()" id="btnn">
 				提交
 			</button>
-			<button class="btnn" onclick="javascript :history.back(-1);" id="btnn">
+			<button class="btnn" onclick="toMainPage()" id="btnn">
 				返回 
 			</button>
 		</div>
@@ -142,6 +154,9 @@
 		//搜索
 		var flag=0;
 		let allMaterial;
+		function toMainPage() {
+			window.location.href="./mainPage"
+		}
 		$.ajax({
 			url:'Material/getMaterialInfo',
 			method:'post',
@@ -153,6 +168,7 @@
 		function pickingInformation(i){
 			flag=i;
 			var search_user_id=document.getElementById('name'+i).value;
+			search_user_id = format(search_user_id);
 			let response = allMaterial.filter(function(key){
 				let alpha = getCamelChars(key.materialName);
 
@@ -256,6 +272,7 @@
 		 function Submission(){
 		 	var userName=document.getElementById('userName').value;
 		 	var time=document.getElementById('date_info').value;
+		 	const fenchang = document.querySelector("#fenchang").value;
 		 	var infos = new Array();
 		 	var x=0;
 		 	var flag_num=true;
@@ -265,7 +282,8 @@
 		 		var id=document.getElementById('id'+i).innerText;
 		 		var num=document.getElementById('num'+i).value;
 		 		var unit=document.getElementById('unit'+i).innerText;
-		 		 
+		 		
+		 		console.log({fenchang})
 		 		if(name!=null&&name!=""){
 			 		let pos=allMaterial.filter(item=>item.materialId==id)[0].warehousePosition; 
 		 			var infoItem = {
@@ -283,17 +301,19 @@
 		 		}
 		 	}
 		 	console.log(JSON.stringify(infos));
-		 	if(infos.length==0 || userName==""){
+		 	if(infos.length==0 || userName=="" || fenchang.value =='未选择分厂' ){
 		 		alert("请确认是否还有未填写信息！");
 		 	}else if(!flag_num){
 		 		alert("请确认数量是否已经填写！");
 		 	}else{
 		 		$.ajax({
 					type: "POST",
+					dataType:'text',
 					url: "Material/notify",//提交的接口
 					data: {
 						/*传值*/
 						user:userName,
+						fenchang:fenchang,
 						Time:time,
 						materials:eval(infos)
 					},
@@ -304,7 +324,7 @@
 					},
 					error:function(error){
 						console.log({error});
-						alert("提交成功!!");
+						alert("提交失败!!");
 						
 						//location.reload(); 
 					}
@@ -312,5 +332,7 @@
 		 	}
 		 	
 		 }
+	
 	</script>
+	<script src="js/util.js"></script>
 </html>

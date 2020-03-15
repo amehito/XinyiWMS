@@ -51,31 +51,7 @@ public class OthersController {
 		
 	}
 	
-	@RequestMapping(value="/videos",produces="plain/text;charset=utf-8")
-	public void video(HttpServletResponse response) throws IOException {
-		response.setCharacterEncoding("utf-8");
-		PrintWriter out = response.getWriter();
-		out.print("<!DOCTYPE html>\r\n" + 
-				"<html lang=\"en\">\r\n" + 
-				"<head>\r\n" + 
-				"    <meta charset=\"UTF-8\">\r\n" + 
-				"    <title>ajaxCros</title>\r\n" + 
-				"</head>\r\n" + 
-				"<body>\r\n" );
-		File file = new File("D:\\videos");
-		File[] files = file.listFiles();
-		int num = 0;
-		for(File f:files) {
-			if(f.getName().endsWith("mp4") ) {
-				String url = "../videos/"+f.getName();
-				out.println("<a href='"+url+"'>"+f.getName()+"</a></br>");
-				num++;
-			}
-		}
-		System.out.println(num);
-		out.print("</body></html>");
 
-	}
 	
 	
 	@RequestMapping(value="/supplier",method=RequestMethod.GET

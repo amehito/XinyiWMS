@@ -1,6 +1,5 @@
- //json数据转excel
-
 function JSONToExcelConvertor(JSONData, FileName) {  
+	FileName = '导出数据'
     //先转化json  
     var arrData = typeof JSONData != 'object' ? JSON.parse(JSONData) : JSONData;  
     var excel = '<table>';   
@@ -16,7 +15,6 @@ function JSONToExcelConvertor(JSONData, FileName) {
     for (var i = 0; i < arrData.length; i++) {  
         var row = "<tr>";  
         for (var index in arrData[i]) {  
-            console.log(arrData[i][index]);
             //var value = arrData[i][index] === "." ? "" : arrData[i][index];  
             row += '<td>' + arrData[i][index] + '</td>';  
         }  
@@ -59,7 +57,7 @@ function JSONToExcelConvertor(JSONData, FileName) {
 
     link.style = "visibility:hidden";  
     link.download = FileName + ".xls";  
-    
+
     document.body.appendChild(link);  
     link.click();  
     document.body.removeChild(link);  
@@ -73,13 +71,3 @@ function isJSON(str) {
             }  
             return false;  
         }
-
-var link = document.createElement("a");      
-    link.href = 'http://ts.owikio.com/business/img/banner.png';  
-
-    link.style = "visibility:hidden";  
-    link.download = 'img.png';  
-    
-    document.body.appendChild(link);  
-    link.click();  
-    document.body.removeChild(link);  

@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import com.xinyi.bean.*;
 import org.apache.ibatis.session.SqlSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +19,6 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xinyi.bean.XinyiActionExample.Criteria;
-import com.xinyi.bean.XinyiBatchStock;
-import com.xinyi.bean.XinyiBatchStockExample;
-import com.xinyi.bean.XinyiImport;
-import com.xinyi.bean.XinyiMaterial;
-import com.xinyi.bean.XinyiMaterialExample;
-import com.xinyi.bean.XinyiModifyhistory;
-import com.xinyi.bean.XinyiPicking;
-import com.xinyi.bean.XinyiPickingExample;
 import com.xinyi.dao.XinyiBatchStockMapper;
 import com.xinyi.dao.XinyiImageMapper;
 import com.xinyi.dao.XinyiImportMapper;
@@ -80,7 +73,7 @@ public class MaterialDataService {
 	}
 	public   String changematerialnumber(XinyiMaterial info) {
 		System.out.println(info.getStockNumber());
-		int num =info.getStockNumber() ;
+		Double num =info.getStockNumber() ;
 	//	XinyiMaterialMapper mapper = materialMapper;
 		XinyiMaterial record = new XinyiMaterial();
 		record.setStockNumber(num);
@@ -111,12 +104,13 @@ public class MaterialDataService {
 		return result;
 	}
 	public   void addChangeHistory(XinyiMaterial info) {
+		//这个方法用不到了，留着不删以防万一
 		// TODO Auto-generated method stub
 //		XinyiModifyhistoryMapper mapper = sqlSession.getMapper(XinyiModifyhistoryMapper.class);
 		XinyiModifyhistory record = new XinyiModifyhistory();
 		record.setMaterialid(info.getMaterialId());
 		record.setMaterialname(info.getMaterialName());
-		record.setMaterialnumber(info.getStockNumber());
+//		record.setMaterialnumber(info.getStockNumber());
 		record.setMaterialunit(info.getMaterialUnit());
 		record.setModifymanager(info.getCreateManager());
 		record.setModifyname("存入");
@@ -134,6 +128,8 @@ public class MaterialDataService {
 			record.setBaoxiuId(notify.getBaoxiuId());
 			record.setName(notify.getAdmin());
 			record.setTime(new Date());
+			//picking表的username用在储存分厂上，现在不想改，以后有机会重构。
+			record.setUsername(notify.getFengChang());
 			System.out.println(notify.getTime()+"传入时间："+notify.getTime());
 			String maString = jsonCreater.writeValueAsString(notify.getMaterials());
 			record.setMaterials(maString);
@@ -185,7 +181,7 @@ public class MaterialDataService {
 //		//sqlSession.commit();
 		
 	}
-	public   boolean passRequest(int id,String admin, ArrayList<Material> materials) {
+	public   boolean passRequest(int id,String admin, ArrayList<Material> materials) throws JsonProcessingException {
 		// TODO Auto-generated method stub
 		XinyiPickingMapper mapper = pickingMapper;
 //	    XinyiBatchStockMapper stockMapper = stockMapper;
@@ -196,7 +192,7 @@ public class MaterialDataService {
 	    //
 	    
 	    
-		try {
+		
 			List<Material> list = new ArrayList<Material>();
 			XinyiPicking record = new XinyiPicking();
 			record.setId(id);
@@ -210,9 +206,9 @@ public class MaterialDataService {
 			for(int i=0;i<jsonArray.size();i++) {
 				com.alibaba.fastjson.JSONObject object = jsonArray.getJSONObject(i);
 			    String materialId =	(String) object.get("materialId");   
-			    int num = object.getIntValue("number");
+			    double num = object.getDoubleValue("number");
 			    material = materialMapper.selectByPrimaryKey(materialId);
-			    int stockNum = material.getStockNumber();
+			    double stockNum = material.getStockNumber();
 			    material.setStockNumber(stockNum - num);
 			    double materialTablePrice = material.getMaterialPrice();
 			    materialMapper.updateByPrimaryKey(material);
@@ -222,7 +218,7 @@ public class MaterialDataService {
 			    com.xinyi.bean.XinyiBatchStockExample.Criteria criteria = stockExample.createCriteria();
 			    criteria.andMaterialidEqualTo((String) object.get("materialId"));
 			    List<XinyiBatchStock> stockList = stockMapper.selectByExample(stockExample);
-			    int _num = num;
+			    double _num = num;
 			   
 			    double totalPrice = 0;
 			    System.out.println(stockList.size());
@@ -236,7 +232,7 @@ public class MaterialDataService {
 			    	
 			    	if(item.getNumber() > _num) {
 					    
-			    		if(item.getPrice()<=0.1) {
+			    		if(item.getPrice()<=0.01) {
 			    			totalPrice += _num * materialTablePrice;
 			    			
 			    		}
@@ -287,7 +283,7 @@ public class MaterialDataService {
 					    materialJson.setUnit((String) object.get("unit"));
 					    materialJson.setBatch(item.getBatch());
 					    list.add(materialJson);
-					    item.setNumber(0);
+					    item.setNumber(0.0);
 					    
 			    		stockMapper.updateByPrimaryKeySelective(item);
 //						//sqlSession.commit();
@@ -329,11 +325,9 @@ public class MaterialDataService {
 			mapper.updateByPrimaryKeySelective(record);
 			//sqlSession.commit();
 		    
-		} catch (Exception e) {
-			e.printStackTrace();
-			// TODO Auto-generated catch block
-			return false;
-		}
+		
+		
+		
 		
 		return true;
 		
@@ -370,6 +364,29 @@ public class MaterialDataService {
 
 		return result;
 	}
+
+	public String reIntoStock(List<XinyiImport> info) {
+		for(XinyiImport i:info){
+			//删除入库表数据
+			XinyiImportExample example = new XinyiImportExample();
+			XinyiImportExample.Criteria criteria = example.createCriteria();
+			criteria.andBatchManageEqualTo(i.getBatchManage());
+			criteria.andMaterialIdEqualTo(i.getMaterialId());
+			criteria.andImportNumberEqualTo(i.getImportNumber());
+			importMapper.deleteByExample(example);
+
+			//修改库存
+
+			XinyiBatchStockExample stockExample = new XinyiBatchStockExample();
+			XinyiBatchStockExample.Criteria stockCri= stockExample.createCriteria();
+			stockCri.andMaterialidEqualTo(i.getMaterialId());
+			stockCri.andBatchEqualTo(i.getBatchManage());
+			stockMapper.deleteByExample(stockExample);
+		}
+
+		return "delete Success";
+	}
+
 	public   String saveList(List<XinyiImport> info,HttpSession session) {
 		// TODO Auto-generated method stub
 		XinyiImportMapper mapper = importMapper;
@@ -403,9 +420,10 @@ public class MaterialDataService {
 					//type 和size对应
 					material.setMaterialType(item.getSize());
 					material.setMaterialUnit(item.getUnit());
-					material.setMaterialPrice(item.getPrice().floatValue());
-					material.setStockNumber(item.getImportNumber());
-					material.setStockSafe(item.getImportNumber());
+//					material.setMaterialPrice(item.getPrice().floatValue());
+					material.setMaterialPrice(item.getPriceIncludeTax().floatValue());
+					material.setStockNumber(item.getImportNumber()*1.0);
+					material.setStockSafe(0);
 					material.setBatchManage(item.getBatchManage());
 					material.setStartTime(new Date());
 					if(session.getAttribute("UserName")==null) {
@@ -539,5 +557,6 @@ public class MaterialDataService {
 		XinyiImportMapper xinyiImportMapper = importMapper;
 		return xinyiImportMapper.selectLastOne().getBatchManage();
 	}
-	
+
+
 }

@@ -63,7 +63,7 @@ public class AccountController {
      @ResponseBody
     public Map<String, Object> passwordModify(@RequestBody Map<String, Object>passwordInfo,
                                        HttpServletRequest request) {
-		System.out.println(passwordInfo);
+//		System.out.println(passwordInfo);
         //初始化 Response
 		
 		
@@ -100,7 +100,7 @@ public class AccountController {
 	public Map<String, Object> register(@RequestBody RegisterInfo info) {
 		String newUsername = info.getNewUsername();
 		String newPassword = info.getNewPassword();
-		System.out.println(newPassword + "  username = "+newUsername);
+//		System.out.println(newPassword + "  username = "+newUsername);
 		
 		SqlSession sqlSession = MybatisOfSpringUtil.getSessionFactory().openSession();
 		

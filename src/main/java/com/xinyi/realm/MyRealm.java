@@ -102,7 +102,7 @@ public class MyRealm extends AuthorizingRealm {
 			XinyiUserRoleKey key = iter.next();
 			
 			String item=sqlSession.getMapper(XinyiRolesMapper.class).selectByPrimaryKey(key.getRoleId()).getRoleName();
-			System.out.println("item"+item);
+//			System.out.println("item"+item);
 			sets.add(item);
 		}
 		sqlSession.close();
@@ -115,7 +115,7 @@ public class MyRealm extends AuthorizingRealm {
 		// TODO Auto-generated method stub
 		String userName = (String) arg0.getPrincipal();
 		String password = getPasswordByUserName(userName);
-		System.out.println("userName="+userName+"  password="+password);
+//		System.out.println("userName="+userName+"  password="+password);
 		if(password==null)
 			return null;
 		Md5Hash md5Hash = new Md5Hash(password);

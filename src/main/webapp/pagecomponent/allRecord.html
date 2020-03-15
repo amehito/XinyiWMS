@@ -76,16 +76,27 @@
 				json = json.reverse();
 				pickingData = json;
 				let pickingArr = [];
-				json.filter((item)=>item.factMaterials!=undefined).map(item=>({"materials":item.factMaterials,"time":item.time,"name":item.name})).forEach(item=>((eval(item.materials).forEach(it=>{it.name = item.name ;it.time=item.time;pickingArr.push(it)}))));
-				pickingArr = pickingArr.map((item)=>({"name":item.name,"time":item.time,"batch":item.batch,"id":item.materialId,"number":item.number,"manufacturing":item.manufacturing,"materialId":item.materialId,"materialName":item.material,"materialSpec":item.materialSpec,"plus":item.plus,"price":item.price*(1-item.taxRate/100),"priceIncludeTax":item.price,"size":item.size,"supplier":item.supplier,"tax":item.tax,"taxRate":item.taxRate,"totalPrice":item.totalPrice*(1-item.taxRate/100),"totalPriceIncludeTax":item.totalPrice,"unit":item.unit,"viceId":item.viceId,"warehousePosition":item.warehousePosition,"status":"出库"}))
+				console.log(json.filter((item)=>item.plus.search('拒绝')==-1).filter(item=>item.factMaterials!=undefined))
+				json.filter((item)=>item.plus.search('拒绝')==-1).filter(item=>item.factMaterials!=undefined).map(item=>({"materials":item.factMaterials,"time":item.time,"name":item.name,"fenchang":item.username})).forEach(item=>((eval(item.materials).forEach(it=>{it.fenchang=item.fenchang;it.name = item.name ;it.time=item.time;pickingArr.push(it)}))));
+				pickingArr = pickingArr.map((item)=>({"fenchang":item.fenchang,"name":item.name,"time":item.time,"batch":item.batch,"id":item.materialId,"number":item.number,"manufacturing":item.manufacturing,"materialId":item.materialId,"materialName":item.material,"materialSpec":item.materialSpec,"plus":item.plus,"price":item.price*(1-item.taxRate/100),"priceIncludeTax":item.price,"size":item.size,"supplier":item.supplier,"tax":item.tax,"taxRate":item.taxRate,"totalPrice":item.totalPrice*(1-item.taxRate/100),"totalPriceIncludeTax":item.totalPrice,"unit":item.unit,"viceId":item.viceId,"warehousePosition":item.warehousePosition,"status":"出库"}))
 				console.log({pickingArr})
 				allArr.push(...pickingArr);
 				arrTemp = allArr;
 				$('#userOperationRecordTable').bootstrapTable({
 			        columns:[{
 			        	field : 'time',
-			        	title : '时间'
-			        },{
+			        	title : '时间',
+			        	formatter : function(value, row, index) {
+			        		let str = '<div style="text-align:left;">'
+							value.split(' ').forEach(item=>{
+								str+=`<div style="width:6em;">${item}</div>`
+							})
+							str+='</div>'
+							return str
+						}
+			        }
+					
+			        ,{
 			        	field : 'status',
 			        	title : '操作'
 			        },{
@@ -173,6 +184,10 @@
 			        	field : 'name',
 			        	title : '领料人'
  			        //	visible :false
+ 			        },{
+			        	field : 'fenchang',
+			        	title : '来自分厂'
+ 			        //	visible :false
  			        },
 			        ],
 			        data:allArr,
@@ -233,18 +248,33 @@
 		
 	}
 	function tableRefresh(search_id,search_start_date,search_end_date) {
-			search_id = search_id.trim()
+			search_id = format(search_id);
 			json = allArr;
 			json=json.filter(function(item){
 				if(search_id == '' && search_start_date =='' && search_end_date ==''){
 					console.log(1);
 					return true;
 				} 
-				else if(search_start_date =='' && search_end_date==''){
-					console.log(2);
+				 else if(search_start_date =='' && search_end_date==''){
+						return tableSearch(item,search_id)
 
-					return item.size == search_id || item.status == search_id;
-				}
+					 /*console.log(2);
+					for(let key in item){ 
+						tempName = item[key]
+						if(item[key] == null || item[key] == undefined){
+							continue;
+						}
+						try {
+							if(item[key] == search_id || item[].search(search_id)!=-1){
+								return true;
+							}
+						} catch (e) {
+														
+							// TODO: handle exception
+						}
+					}
+					*/	return false;
+				} 
 				else if(search_id==''){
 
 					return filterDate(item.time ,search_start_date,search_end_date);
@@ -252,11 +282,13 @@
 				else{
 					console.log(4);
 					console.log({search_id,item});
-					return (item.name == search_id || item.size == search_id ) && filterDate(item.time,search_start_date,search_end_date);
+					return tableSearch(item,search_id) && filterDate(item.time,search_start_date,search_end_date)
 				}										
 			})
 			arrTemp = json;
-			if(search_id!='出库'){
+			
+			$('#userOperationRecordTable').bootstrapTable('load', json);
+			/* if(search_id!='出库'){
 				//隐藏领料人
 				switchNameDisplay(false);
 				$('#userOperationRecordTable').bootstrapTable('load', json);
@@ -264,7 +296,7 @@
 			else{
 				switchNameDisplay(true);
 				$('#userOperationRecordTable').bootstrapTable('load', json);
-			}
+			} */
 	
 		
 	}
@@ -381,54 +413,3 @@
 	</div>
 </div>
 
-<div id="detail_modal" class="modal fade" table-index="-1" role="dialog"
-	aria-labelledby="myModalLabel" aria-hidden="true"
-	data-backdrop="static">
-	<div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel"></h4>
-      </div>
-      <div class="modal-body">
-        <table  border=1; cellpadding=12; cellspacing=0; align=center id="modalTable">
-				<tr align=center>
-					<td colspan="4">领料单</td>
-				</tr>
-				<tr align=center>
-					<td>领料人姓名:</td>
-					<td colspan="3" id="userName"></td>
-					
-				</tr>
-				<tr align=center>
-					<td>领料日期:</td>
-					<td colspan="3" id="time"></td>
-				</tr>
-				
-				<tr align=center>
-					<td colspan="4">领料信息</td>
-				</tr>
-				<tr align=center>
-					<td>物品名称</td>
-					<td>物品编号</td>
-					<td>数量</td>
-					<td>单位</td>
-					
-				</tr>
-				<tbody id="information">
-				<tr align=center>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-				</tbody>
-				
-			</table>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="identifyExport" data-dismiss="modal">确定</button>
-      </div>
-    </div>
-  </div>
-</div>

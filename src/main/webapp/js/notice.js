@@ -56,7 +56,7 @@ function showNotification(text){
 	function show(item){
 		console.log({item});
 		let html = `
-		<div class="panel panel-default noticePanel" data-toggle="modal" data-target="#myModal" onclick="seeInformation(${item.id})" style="background:#50b7c1" >
+		<div class="panel panel-default noticePanel" data-toggle="modal" data-target="#noticeModal" onclick="seeInformation(${item.id})" style="background:#50b7c1" >
 			<div class="panel-body">
 				有一条来自<strong>${item.name}</strong>的取料请求，编号为<strong>${item.id}</strong>  点击我查看 :)
   			</div>
@@ -107,6 +107,7 @@ document.querySelector('#identifyExport').addEventListener('click',function(){
 	})});
 	
 		$.ajax({
+			dataType:'text',
 			type: "POST",
 			url: "Material/passRequest",//提交的接口
 			data: {
@@ -119,7 +120,7 @@ document.querySelector('#identifyExport').addEventListener('click',function(){
 				location.reload()
 			},
 			error:function(response){
-				alert("提交成功");
+				alert("出现错误，请检查网络或者联系管理员");
 				location.reload()
 			}
 		});

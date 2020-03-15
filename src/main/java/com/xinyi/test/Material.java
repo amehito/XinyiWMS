@@ -12,7 +12,7 @@ public class Material{
 		private String plus;
 		private String material;
 		private String materialId;
-		private int number;
+		private double number;
 		private String unit;
 		private double totalPrice;
 		private String batch;
@@ -101,10 +101,10 @@ public class Material{
 		public void setMaterialId(String materialId) {
 			this.materialId = materialId;
 		}
-		public int getNumber() {
+		public double getNumber() {
 			return number;
 		}
-		public void setNumber(int number) {
+		public void setNumber(double number) {
 			this.number = number;
 		}
 		public String getUnit() {

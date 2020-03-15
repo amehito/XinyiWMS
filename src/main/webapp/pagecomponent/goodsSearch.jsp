@@ -15,6 +15,7 @@
  <script>
  	let allImageInfo = [];
  	let globalRow ;
+ 	let arrTemp =[];
  	
  	function getAllInfo(){
  		fetch('Material/ImageInfo')
@@ -42,6 +43,7 @@
         datePickerInit();
         userOperationRecordTableInit();
         searchActionInit();
+        exportStorageAction();
     })
 	
     function showPicture(row){
@@ -95,7 +97,7 @@
 			method:'post',
 			success:function(response){						
 			$('#userOperationRecordTable').bootstrapTable('load', response);
-
+				arrTemp = response;
 			}
 		});
 	}
@@ -133,7 +135,6 @@
 			'viceId':document.querySelector('#viceIdInput').value.trim(),
 			'warehousePosition':document.querySelector('#warehousePositionInput').value.trim(),
     	}
-    	console.log({material});
     	$.ajax({
 			type: "POST",
 			url: "Material/modifyMaterialProperty",//提交的接口
@@ -318,6 +319,13 @@
 
 	// 琛ㄦ牸鍒濆鍖�
 	function userOperationRecordTableInit(){
+		$.ajax({
+			url:'Material/getMaterialInfo',
+			method:'post',
+			success:function(response){
+			arrTemp = response;
+			}
+		});
 		$('#userOperationRecordTable').bootstrapTable({
 			columns:[{
 	            field : 'materialId',
@@ -455,8 +463,17 @@
 
 	// 琛ㄦ牸鍒锋柊
 	
-	function formatId(str){
-		
+	
+	function exportStorageAction() {	
+		$('#export_storage').click(function() {
+			$('#export_modal').modal("show");
+			console.log('导出开始')
+		})
+		$('#export_storage_download').click(function(){
+			JSONToExcelConvertor(arrTemp);			
+			$('#export_modal').modal("hide");
+		})
+
 	}
 	function tableRefresh(search_user_id) {
 		search_user_id = search_user_id.trim()
@@ -480,7 +497,7 @@
 			console.log({filterdata});
 			
 			$('#userOperationRecordTable').bootstrapTable('load', filterdata);
-
+			arrTemp = filterdata;
 			}
 		});
 		
@@ -521,7 +538,9 @@
                     <div class="form-group">
                         <input type="text" id="user_id" class="form-control" placeholder="零配件Id或名称" style="width:50%">
                     </div>
-                
+                	<button class="btn btn-sm btn-default" id="export_storage" >
+						<span class="glyphicon glyphicon-export"></span> <span>导出</span>
+					</button>
             </div>
             
        <!--      <div class="col-md-7">
@@ -607,7 +626,39 @@
 		</div>
 	</div>
 </div>
-
+<div class="modal fade" id="export_modal" table-index="-1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true"
+	data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button class="close" type="button" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel">导出库存信息</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-3 col-sm-3" style="text-align: center;">
+						<img src="media/icons/warning-icon.png" alt=""
+							style="width: 70px; height: 70px; margin-top: 20px;">
+					</div>
+					<div class="col-md-8 col-sm-8">
+						<h3>是否确认导出库存信息</h3>
+						<p>(注意：请确定要导出的库存信息，导出的内容为当前列表的搜索结果)</p>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-default" type="button" data-dismiss="modal">
+					<span>取消</span>
+				</button>
+				<button class="btn btn-success" type="button" id="export_storage_download">
+					<span>确认下载</span>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
 <!-- 确认是否删除Modal -->
 <div class="modal fade" id="deleteModal" table-index="-1" role="dialog"
 	aria-labelledby="imageModalLabel" aria-hidden="true"

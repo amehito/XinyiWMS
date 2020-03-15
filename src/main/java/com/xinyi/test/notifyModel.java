@@ -17,6 +17,7 @@ public class notifyModel {
 	private String admin;
 	private Date Time;
 	private List<Material> Materials;
+	private String fenchang;
 
 	
 	public String getAdmin() {
@@ -36,6 +37,13 @@ public class notifyModel {
 	}
 	public void setMaterials(List<Material> materials) {
 		Materials = materials;
+	}
+	public void setFengChang(String string) {
+		// TODO Auto-generated method stub
+		this.fenchang = string ;
+	}
+	public String getFengChang() {
+		return fenchang;
 	}
 	
 	

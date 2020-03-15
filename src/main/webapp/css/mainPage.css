@@ -11,12 +11,12 @@ a:link{
 	position: relative;
 	overflow: hidden;
 }
-#myModal td{
+#noticeModal td{
 			width:160px;
 			height:30px;
 			font-size:20px;
 	}
-#myModal table{
+#noticeModal table{
 	width:80%;	
 
 }

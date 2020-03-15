@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -60,7 +61,13 @@ public class DataController {
     	String result =materialDataService.saveList(info,session);	
     	return result;
     }
-    
+	@RequestMapping(value="/reIntoStock",produces="application/json;charset=utf-8")
+	public @ResponseBody String reIntoStock(@RequestBody List<XinyiImport>info ) throws JsonProcessingException {
+		System.out.println(info.size());
+		System.out.println(info.get(0).getMaterialId());
+		return materialDataService.reIntoStock(info);
+
+	}
     @RequestMapping(value="/allRecord",produces="application/json;charset=utf-8")
 	public @ResponseBody String getAllRecord() throws JsonProcessingException {
     	String result =materialDataService.getAllRecord();	
@@ -111,15 +118,18 @@ public class DataController {
 	}
 	
 	@RequestMapping(value="/passRequest",produces="application/json;charset=utf-8")
-	public @ResponseBody String passRequest(HttpSession session,@RequestParam(value="globalId") String id,HttpServletRequest request)  {
+	public @ResponseBody String passRequest(HttpSession session,@RequestParam(value="globalId") String id,HttpServletRequest request) throws NumberFormatException, JsonProcessingException  {
 		String admin = (String) session.getAttribute("UserName");
+		if(admin==null) {
+			return "登陆失效，请刷新或者重新登陆"; 
+		}
 		Map<String,String[]> params =  request.getParameterMap();
 	    ArrayList<Material> materials = new ArrayList<Material>();
 	    System.out.println(params.size());
 	    for(int i=0;i<params.size()/2;i++) {       	     
         	Material material = new Material();
         	material.setMaterialId(params.get("materialInfo["+i+"][materialId]")[0]);
-        	material.setNumber(Integer.parseInt(params.get("materialInfo["+i+"][number]")[0]));
+        	material.setNumber(Double.parseDouble(params.get("materialInfo["+i+"][number]")[0]));
         	materials.add(material);
         }
 	    if(!materialDataService.passRequest(Integer.parseInt(id),admin,materials)) {
@@ -180,8 +190,8 @@ public class DataController {
             System.out.println("key:"+entry.getKey()+" value:"+ Arrays.asList(entry.getValue()));
             
         }
-        
         notify = new notifyModel();
+        notify.setFengChang(params.get("fenchang")[0]);
         try {
         	notify.setBaoxiuId(params.get("baoxiu_id")[0]);
         }catch (Exception e) {
@@ -189,7 +199,6 @@ public class DataController {
         	
 		}
         System.out.println("baoxiu_id"+notify.getBaoxiuId());
-        
         notify.setAdmin(params.get("user")[0]);
         notify.setTime(format.parse(params.get("Time")[0]));
  //       System.out.println(notify.getAdmin());
@@ -203,7 +212,7 @@ public class DataController {
         	Material material = new Material();
         	material.setMaterialId(params.get("materials["+i+"][materialId]")[0]);
         	material.setMaterial(params.get("materials["+i+"][material]")[0]);
-        	material.setNumber(Integer.parseInt(params.get("materials["+i+"][number]")[0]));
+        	material.setNumber(Double.parseDouble(params.get("materials["+i+"][number]")[0]));
         	material.setUnit(params.get("materials["+i+"][unit]")[0]);
         	try {
             	material.setWarehousePosition(params.get("materials["+i+"][warehousePosition]")[0]);

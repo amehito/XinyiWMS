@@ -131,17 +131,14 @@ public class myController {
 		return "mainPage";
 		
 	}
-	@RequestMapping("/test")
-	public void test(HttpServletResponse response) throws IOException {
-		response.sendRedirect("login-page.html");
-	}
+	
 	@RequestMapping("/mainPage")
 	public String home() {
 		org.apache.shiro.subject.Subject currentSubject = SecurityUtils.getSubject();
         if (!currentSubject.isAuthenticated())
             return "login";
         else {
-        	System.out.println("重定向了");
+//        	System.out.println("重定向了");
             return "mainPage";
             
         }

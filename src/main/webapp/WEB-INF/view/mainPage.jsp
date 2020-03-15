@@ -71,140 +71,9 @@ pageEncoding="UTF-8"%>
             <!-- 左侧导航栏  -->
             <!--依照accordion为parent-->
             <div class="panel-group" id="accordion">
-               <!--  <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a>链接至class为collapse1的div，即库存管理与出入库管理
-                            <a href="#collapse1" data-toggle="collapse" data-parent="#accordion"
-                               class="parentMenuTitle collapseHead">库存管理</a>
-                            <div class="pull-right">
-                                <span class="caret"></span>
-                            </div>
-                        </h4>
-                    </div>
-                    <div id="collapse1" class="panel-collapse collapse collapseBody">
-                        <div class="panel-body">
-                            <ul class="list-group">
-                                若为普通管理员
-                                <shiro:hasRole name="commonsAdmin">
-                                    <li class="list-group-item">
-                                        <a href="javascript:void(0)" id="" class="menu_item"
-                                           name="pagecomponent/storageManagementCommon.jsp">库存查询</a>
-                                    </li>
-                                </shiro:hasRole>
-                                若为超级管理员
-                                <shiro:hasRole name="systemAdmin">
-                                    <li class="list-group-item">
-                                        <a href="javascript:void(0)" id="" class="menu_item"
-                                           name="pagecomponent/storageManagement.jsp">库存查询</a>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <a href="javascript:void(0)" id=""
-                                           class="menu_item"
-                                           name="pagecomponent/stockRecordManagement.html">出入库记录</a>
-                                    </li>
-                                </shiro:hasRole>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a href="#collapse2" data-toggle="collapse" data-parent="#accordion"
-                               class="parentMenuTitle collapseHead">出入库管理</a>
-                            <div class="pull-right">
-                                <span class="caret"></span>
-                            </div>
-                        </h4>
-                    </div>
-                    <div id="collapse2" class="panel-collapse collapse collapseBody in">
-                        <div class="panel-body">
-                            <shiro:hasRole name="systemAdmin">
-                                <ul class="list-group">
-                                    <li class="list-group-item">
-                                        <a href="javascript:void(0)" id="" class="menu_item"
-                                           name="pagecomponent/stock-inManagement.jsp">货物入库</a>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <a href="javascript:void(0)" id="" class="menu_item"
-                                           name="pagecomponent/stock-outManagement.jsp">货物出库</a>
-                                    </li>
-                                </ul>
-                            </shiro:hasRole>
-                            <shiro:hasRole name="commonsAdmin">
-                                <ul class="list-group">
-                                    <li class="list-group-item">
-                                        <a href="javascript:void(0)" id="" class="menu_item"
-                                           name="#">货物入库</a>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <a href="javascript:void(0)" id="" class="menu_item"
-                                           name="#">货物出库</a>
-                                    </li>
-                                </ul>
-                            </shiro:hasRole>
-                        </div>
-                    </div>
-                </div>
-                <shiro:hasRole name="systemAdmin">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h4 class="panel-title">
-                                <a href="#collapse3" data-toggle="collapse" data-parent="#accordion"
-                                   class="parentMenuTitle collapseHead">人员管理</a>
-                                <div class="pull-right	">
-                                    <span class="caret"></span>
-                                </div>
-                            </h4>
-                        </div>
-                        <div id="collapse3" class="panel-collapse collapse collapseBody">
-                            <div class="panel-body">
-                                <ul class="list-group">
-                                    <li class="list-group-item">
-                                        <a href="javascript:void(0)" id="" class="menu_item"
-                                           name="pagecomponent/repositoryAdminManagement.jsp">仓库管理员管理</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </shiro:hasRole>
-                <shiro:hasRole name="systemAdmin">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h4 class="panel-title">
-                                <a href="#collapse4" data-toggle="collapse" data-parent="#accordion"
-                                   class="parentMenuTitle collapseHead">基础数据</a>
-                                <div class="pull-right	">
-                                    <span class="caret"></span>
-                                </div>
-                            </h4>
-                        </div>
-                        <div id="collapse4" class="panel-collapse collapse collapseBody">
-                            <div class="panel-body">
-                                <ul class="list-group">
-                                    <li class="list-group-item">
-                                        <a href="javascript:void(0)" id="" class="menu_item"
-                                           name="pagecomponent/supplierManagement.jsp">供应商信息管理</a>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <a href="javascript:void(0)" id="" class="menu_item"
-                                           name="pagecomponent/customerManagement.jsp">客户信息管理</a>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <a href="javascript:void(0)" id="" class="menu_item"
-                                           name="pagecomponent/goodsManagement.jsp">货物信息管理</a>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <a href="javascript:void(0)" id="" class="menu_item"
-                                           name="pagecomponent/repositoryManagement.jsp">仓库信息管理</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </shiro:hasRole> -->
+              
+              
+                 
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
@@ -223,7 +92,7 @@ pageEncoding="UTF-8"%>
                                 <shiro:hasRole name="systemAdmin">
                                     <li class="list-group-item">
                                         <a href="javascript:void(0)" id=""
-                                           class="menu_item" name="pagecomponent/userOperationRecorderManagement.html">出库日志</a>
+                                           class="menu_item" name="pagecomponent/stock-outManagementRecords.html">出库日志</a>
                                     </li>
                                     <li class="list-group-item">
                                         <a href="javascript:void(0)" id=""
@@ -252,7 +121,7 @@ pageEncoding="UTF-8"%>
                                 </li>
                                 
                                     <li class="list-group-item">
-                                        <a href="javascript:void(0)" id="" class="menu_item" name="pagecomponent/userOperationRecorderManagement.html">出库日志</a>
+                                        <a href="javascript:void(0)" id="" class="menu_item" name="pagecomponent/stock-outManagementRecords.html">出库日志</a>
                                     </li>
                                     <li class="list-group-item">
                                         <a href="javascript:void(0)" id="" class="menu_item" name="pagecomponent/stock-inManagementRecords.html">入库日志</a>
@@ -322,12 +191,12 @@ pageEncoding="UTF-8"%>
     </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="noticeModal" tabindex="-1" role="dialog" >
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel"></h4>
+        <h4 class="modal-title" ></h4>
       </div>
       <div class="modal-body">
         <table  border=1; cellpadding=6; cellspacing=0; align=center id="modalTable">
@@ -376,6 +245,8 @@ pageEncoding="UTF-8"%>
 
 <script type="text/javascript"
         src="./js/jquery-2.2.3.min.js"></script>
+<script type="text/javascript"
+        src="./js/util.js"></script>        
 <script type="text/javascript"
         src="./js/bootstrap.min.js"></script>
 <script type="text/javascript"

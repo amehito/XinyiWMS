@@ -6,7 +6,7 @@
     search_start_date = null
     search_end_date = null
 	let data;
-    let chooseRowList = [];
+    const chooseRowList = new Set();
     	
 	
     $(function(){
@@ -38,9 +38,9 @@
   		document.addEventListener('click',(event)=>{
   			
   			if(event.srcElement.tagName != 'TR' && event.srcElement.tagName != 'TD' && event.srcElement.tagName != 'INPUT'){
-      			document.querySelector('#chooseBtn')==null?'':document.querySelector('#deleteBtn').remove();
+      			document.querySelector('#chooseBtn')==null?'':document.querySelector('#chooseBtn').remove();
       			document.querySelectorAll('#userOperationRecordTable tr').forEach(item=>{item.style.background='white'});
-      			chooseRowList = chooseRowList.slice(0,0);
+      			chooseRowList.clear()
   			}
   		})
   		document.querySelector('#userOperationRecordTable').oncontextmenu=function(){return false};
@@ -49,7 +49,10 @@
   				showButton(event);
   			}
   		});
-  		let timer = null;
+
+
+
+        let timer = null;
       	let startTime = '';
       	let endTime = '';
       	const label = document.querySelector('#userOperationRecordTable');
@@ -68,7 +71,7 @@
       	});
 	};
 	function showButton(ev) {
-  		document.querySelector('#deleteBtn')==null?'':document.querySelector('#deleteBtn').remove();
+  		document.querySelector('#chooseBtn')==null?'':document.querySelector('#chooseBtn').remove();
         let oEvent=ev;
         console.log(oEvent);
         let oDiv=document.createElement('div');
@@ -88,7 +91,7 @@
         oDiv.style.position='absolute'; // 为新创建的DIV指定绝对定位
         oDiv.style.width='200px'; // 指定宽度
         oDiv.style.height='200px'; // 指定高度
-        oDiv.id = 'deleteBtn';
+        oDiv.id = 'chooseBtn';
         oDiv.innerHTML = `<button class="btn" id='chooseBtn'>撤回</button>`;
         document.body.appendChild(oDiv); 
         oDiv.oncontextmenu=function(){return false};
@@ -104,17 +107,46 @@
         //把右键的元素加入列表中
 		switch (that.srcElement.parentElement.tagName) {
 			case 'TD':
-				chooseRowList.push(that.srcElement.parentElement.parentElement);
+				chooseRowList.add(that.srcElement.parentElement.parentElement);
 				break;
 
 			case 'TR':
-				chooseRowList.push(that.srcElement.parentElement);
+				chooseRowList.add(that.srcElement.parentElement);
 				break;
+
 		}
         console.log(chooseRowList);
 	}
 	function reIntoStock(chooseRowList) {
-		
+	    const data = []
+
+        for (let item of chooseRowList.values()) {
+            const info = {}
+            info.materialId = item.children[0].innerText
+            info.importNumber = item.children[4].innerText
+			info.batchManage = item.children[12].innerText
+			data.push(info)
+        }
+        console.log(data)
+        $.ajax({
+            url:"Material/reIntoStock",
+            type:'POST',
+            data:JSON.stringify(data),
+            dataType:'text',
+            contentType:"application/json;charset=utf8",
+            success:function(response){
+				console.log('succ')
+				window.location.reload()
+                document.querySelectorAll('#sideBar li')[3].click()
+
+
+            },
+			error:function (response) {
+
+				console.log('err')
+            }
+        })
+		console.log('start reIntoStock')
 	}
 	// 表格初始化
 	function userOperationRecordTableInit(){
@@ -274,17 +306,16 @@
 				} 
 				else if(search_start_date =='' && search_end_date==''){
 					console.log(2);
-
-					return item.size == search_id ;
-				}
+					return tableSearch(item,search_id);
+/* 					return item.size == search_id ;
+ */				}
 				else if(search_id==''){
 
 					return filterDate(item.batchManage ,search_start_date,search_end_date);
 				}
 				else{
-					console.log(4);
-					console.log({search_id,item});
-					return item.size == search_id && filterDate(item.batchManage,search_start_date,search_end_date);
+					console.log(4)
+					return tableSearch(item,search_id) && filterDate(item.batchManage,search_start_date,search_end_date);
 				}										
 			})
 			data = json;
@@ -380,14 +411,14 @@
 
 <!-- 导出库存 -->
 <div class="modal fade" id="export_modal" table-index="-1" role="dialog"
-	aria-labelledby="myModalLabel" aria-hidden="true"
+	aria-labelledby="exportModalLabel" aria-hidden="true"
 	data-backdrop="static">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button class="close" type="button" data-dismiss="modal"
 					aria-hidden="true">&times;</button>
-				<h4 class="modal-title" id="myModalLabel">导出库存信息</h4>
+				<h4 class="modal-title" id="exportModalLabel">导出库存信息</h4>
 			</div>
 			<div class="modal-body">
 				<div class="row">
@@ -413,54 +444,3 @@
 	</div>
 </div>
 
-<div id="detail_modal" class="modal fade" table-index="-1" role="dialog"
-	aria-labelledby="myModalLabel" aria-hidden="true"
-	data-backdrop="static">
-	<div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel"></h4>
-      </div>
-      <div class="modal-body">
-        <table  border=1; cellpadding=12; cellspacing=0; align=center id="modalTable">
-				<tr align=center>
-					<td colspan="4">领料单</td>
-				</tr>
-				<tr align=center>
-					<td>领料人姓名:</td>
-					<td colspan="3" id="userName"></td>
-					
-				</tr>
-				<tr align=center>
-					<td>领料日期:</td>
-					<td colspan="3" id="time"></td>
-				</tr>
-				
-				<tr align=center>
-					<td colspan="4">领料信息</td>
-				</tr>
-				<tr align=center>
-					<td>物品名称</td>
-					<td>物品编号</td>
-					<td>数量</td>
-					<td>单位</td>
-					
-				</tr>
-				<tbody id="information">
-				<tr align=center>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-				</tbody>
-				
-			</table>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="identifyExport" data-dismiss="modal">确定</button>
-      </div>
-    </div>
-  </div>
-</div>
